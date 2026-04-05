@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { apiFetch } from "@/lib/api";
 import Link from "next/link";
 import { MoveRight, Shield, FileText, Search, ArrowLeft } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 
 interface Policy {
   id: string;
@@ -12,6 +13,16 @@ interface Policy {
   link: string;
   category: "Security" | "Privacy" | "Legal";
 }
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export default function PoliciesPage() {
   const [policies, setPolicies] = useState<Policy[]>([]);
@@ -54,14 +65,19 @@ export default function PoliciesPage() {
           <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden md:block">
             Sign In
           </Link>
-          <Link href="/signup" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold shadow-sm">
+          <Link href="/signup" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-bold shadow-sm hover:opacity-90 transition-all">
             Join Platform
           </Link>
         </div>
       </nav>
 
       <main className="max-w-6xl mx-auto px-6 py-16 md:py-24">
-        <div className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8">
+        <motion.div 
+           className="flex flex-col md:flex-row md:items-end justify-between mb-16 gap-8"
+           initial={{ opacity: 0, y: 20 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.6 }}
+        >
           <div className="max-w-xl">
             <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-4 leading-tight">Governance & Protocols</h1>
             <p className="text-muted-foreground leading-relaxed italic">
@@ -77,7 +93,7 @@ export default function PoliciesPage() {
                 className="w-full pl-11 pr-4 py-3.5 bg-muted/50 border border-border rounded-xl focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/50 text-sm text-foreground placeholder:text-muted-foreground/20 transition-all shadow-sm"
              />
           </div>
-        </div>
+        </motion.div>
 
         {loading ? (
            <div className="flex flex-col items-center justify-center py-32 gap-4">
@@ -85,9 +101,14 @@ export default function PoliciesPage() {
              <span className="text-xs text-muted-foreground animate-pulse">Syncing legal frameworks...</span>
            </div>
         ) : (
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+           <motion.div 
+             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+             variants={containerVariants}
+             initial="hidden"
+             animate="show"
+           >
               {filtered.length > 0 ? filtered.map((policy) => (
-                <div key={policy.id} className="bg-card border border-border p-8 rounded-2xl hover:border-primary/30 hover:bg-muted/30 transition-all flex flex-col gap-5 group shadow-sm">
+                <motion.div key={policy.id} variants={itemVariants} whileHover={{ y: -5, transition: { duration: 0.2 } }} className="bg-card border border-border p-8 rounded-2xl hover:border-primary/30 hover:bg-muted/30 transition-all flex flex-col gap-5 group shadow-sm">
                    <div className="flex items-start justify-between">
                       <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                         {policy.category === 'Security' ? <Shield className="w-5 h-5 text-primary" /> : <FileText className="w-5 h-5 text-primary" />}
@@ -107,19 +128,24 @@ export default function PoliciesPage() {
                    <Link href={policy.link} className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:gap-3 transition-all">
                       Read full protocol <MoveRight className="w-4 h-4" />
                    </Link>
-                </div>
+                </motion.div>
               )) : (
-                <div className="col-span-full py-24 text-center border-2 border-dashed border-border rounded-3xl flex flex-col items-center gap-4 text-muted-foreground/30">
+                <motion.div variants={itemVariants} className="col-span-full py-24 text-center border-2 border-dashed border-border rounded-3xl flex flex-col items-center gap-4 text-muted-foreground/30">
                    <Search className="w-10 h-10" />
                    <p className="text-sm font-medium italic">No protocols match your criteria.</p>
-                </div>
+                </motion.div>
               )}
-           </div>
+           </motion.div>
         )}
       </main>
 
       <footer className="py-20 bg-muted/30 border-t border-border mt-20">
-        <div className="max-w-6xl mx-auto px-6 text-center flex flex-col items-center gap-6">
+        <motion.div 
+          className="max-w-6xl mx-auto px-6 text-center flex flex-col items-center gap-6"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          viewport={{ once: true }}
+        >
            <h2 className="text-2xl font-serif text-foreground/80 italic">&ldquo;Trust is a function of transparency.&rdquo;</h2>
            <div className="flex gap-8 text-xs font-bold text-muted-foreground uppercase tracking-widest">
               <Link href="#" className="hover:text-primary transition-colors">GDPR Compliance</Link>
@@ -127,7 +153,7 @@ export default function PoliciesPage() {
               <Link href="#" className="hover:text-primary transition-colors">Audit Logs</Link>
            </div>
            <p className="text-[10px] text-muted-foreground/40 mt-4">&copy; {new Date().getFullYear()} Objection.ai Platform Governance</p>
-        </div>
+        </motion.div>
       </footer>
     </div>
   );

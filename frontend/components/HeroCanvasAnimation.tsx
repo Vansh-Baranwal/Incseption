@@ -133,7 +133,7 @@ export default function HeroCanvasAnimation() {
   const vignetteMid = theme === "dark" ? "rgba(26,20,16,0.4)" : "rgba(252,251,249,0.4)";
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-background w-full transition-colors duration-300">
+    <div ref={containerRef} className="relative h-[150vh] bg-background w-full transition-colors duration-300">
       {/* Loading Screen */}
       {!isLoaded && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
@@ -174,28 +174,43 @@ export default function HeroCanvasAnimation() {
         {/* Text Overlays */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <motion.div style={{ opacity: op1 }} className="absolute text-center px-6 w-full max-w-4xl">
-            <h1 className="text-4xl md:text-7xl font-serif text-foreground leading-[1.1] drop-shadow-sm">
+            <h1 
+              className="text-4xl md:text-7xl font-serif text-foreground leading-[1.1]" 
+              style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
+            >
               Justice, Redefined.
             </h1>
           </motion.div>
 
           <motion.div style={{ opacity: op2 }} className="absolute text-center px-6 w-full max-w-4xl">
-            <h2 className="text-3xl md:text-6xl font-serif text-foreground leading-[1.15] drop-shadow-sm">
+            <h2 
+              className="text-3xl md:text-6xl font-serif text-foreground leading-[1.15]"
+              style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
+            >
               Every Document<br />Is Truth.
             </h2>
           </motion.div>
 
           <motion.div style={{ opacity: op3 }} className="absolute text-center px-6 w-full max-w-4xl">
-            <h2 className="text-3xl md:text-6xl font-serif text-foreground leading-[1.15] drop-shadow-sm">
+            <h2 
+              className="text-3xl md:text-6xl font-serif text-foreground leading-[1.15]"
+              style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
+            >
               Immutable. Verifiable.<br />Absolute.
             </h2>
           </motion.div>
 
           <motion.div style={{ opacity: op4 }} className="absolute text-center pointer-events-auto px-6 w-full max-w-4xl flex flex-col items-center gap-8">
-            <h2 className="text-4xl md:text-7xl font-serif text-foreground drop-shadow-sm">Enter The Vault</h2>
+            <h2 
+              className="text-4xl md:text-7xl font-serif text-foreground"
+              style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
+            >
+              Enter The Vault
+            </h2>
             <Link 
               href="/login" 
-              className="px-8 py-3 bg-foreground text-background text-sm font-medium rounded-md hover:opacity-90 transition-all font-sans"
+              className="px-8 py-3 bg-foreground text-background text-sm font-medium rounded-md hover:opacity-90 transition-all font-sans hover:scale-105"
+              style={{ boxShadow: "0 0 30px var(--background)" }}
             >
               Sign In
             </Link>

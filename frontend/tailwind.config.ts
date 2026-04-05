@@ -32,8 +32,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-inter)', 'Inter', 'system-ui', 'sans-serif'],
-        serif: ['Georgia', 'Times New Roman', 'serif'],
+        sans: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
+        serif: ['var(--font-jakarta)', 'system-ui', 'sans-serif'],
       },
       transitionProperty: {
         'colors': 'background-color, border-color, color, fill, stroke, text-decoration-color, opacity, box-shadow, transform, filter, backdrop-filter',

@@ -6,6 +6,20 @@ import ChatUI from "@/components/ChatUI";
 import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
 import { FileText, Clock, ShieldCheck, Search } from "lucide-react";
+import { motion, Variants } from "framer-motion";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.1, delayChildren: 0.1 }
+  }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export default function CitizenDashboard() {
   const [vaultDocs, setVaultDocs] = useState<any[]>([]);
@@ -29,8 +43,13 @@ export default function CitizenDashboard() {
   };
 
   return (
-    <div className="flex flex-col gap-10 py-4">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <motion.div 
+      className="flex flex-col gap-10 py-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+    >
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h2 className="text-3xl font-serif text-foreground mb-2">Citizen Dashboard</h2>
           <p className="text-sm text-muted-foreground max-w-md italic">
@@ -41,19 +60,21 @@ export default function CitizenDashboard() {
           <Clock className="w-4 h-4 text-primary" />
           <span className="text-xs font-medium text-foreground/70 tracking-tight">Last verified: Today, 2:45 PM</span>
         </div>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
          <div className="lg:col-span-12 xl:col-span-7 flex flex-col gap-8">
             {/* Whistleblower upload */}
-            <FileUpload 
-              title="Secure Whistleblower Vault" 
-              endpoint="/whistleblower/upload" 
-              onSuccess={handleWhistleblowerSuccess} 
-            />
+            <motion.div variants={itemVariants}>
+              <FileUpload 
+                title="Secure Whistleblower Vault" 
+                endpoint="/whistleblower/upload" 
+                onSuccess={handleWhistleblowerSuccess} 
+              />
+            </motion.div>
 
             {/* Document list */}
-            <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
+            <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
                <div className="px-6 py-5 border-b border-border bg-muted/20 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-semibold text-foreground tracking-tight">Your Digital Vault</h3>
@@ -76,9 +97,19 @@ export default function CitizenDashboard() {
                      <span className="text-xs text-muted-foreground animate-pulse">Syncing vault...</span>
                    </div>
                  ) : vaultDocs.length > 0 ? (
-                   <div className="grid gap-2">
+                   <motion.div 
+                     className="grid gap-2"
+                     variants={containerVariants}
+                     initial="hidden"
+                     animate="show"
+                   >
                      {vaultDocs.map((doc, idx) => (
-                       <div key={idx} className="group flex items-center justify-between p-3.5 bg-background border border-border rounded-xl hover:border-primary/30 hover:bg-muted/30 transition-all cursor-pointer">
+                       <motion.div 
+                          key={idx} 
+                          variants={itemVariants}
+                          whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+                          className="group flex items-center justify-between p-3.5 bg-background border border-border rounded-xl hover:border-primary/30 hover:bg-muted/30 transition-all cursor-pointer"
+                       >
                           <div className="flex items-center gap-4">
                              <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
                                <FileText className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
@@ -98,9 +129,9 @@ export default function CitizenDashboard() {
                             </span>
                             {doc.status === "Verified" && <ShieldCheck className="w-4 h-4 text-emerald-500/50" />}
                           </div>
-                       </div>
+                       </motion.div>
                      ))}
-                   </div>
+                   </motion.div>
                  ) : (
                    <div className="flex flex-col items-center justify-center py-20 text-muted-foreground/30 gap-4">
                       <div className="p-4 bg-muted rounded-full">
@@ -113,11 +144,11 @@ export default function CitizenDashboard() {
                    </div>
                  )}
                </div>
-            </div>
+            </motion.div>
          </div>
 
          {/* Chat */}
-         <div className="lg:col-span-12 xl:col-span-5 flex flex-col gap-6">
+         <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-5 flex flex-col gap-6">
             <div className="flex items-center justify-between">
                <div className="flex items-center gap-2">
                  <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
@@ -136,8 +167,8 @@ export default function CitizenDashboard() {
                   </p>
                </div>
             </div>
-         </div>
+         </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -6,6 +6,17 @@ import QRViewer from "@/components/QRViewer";
 import { apiFetch } from "@/lib/api";
 import toast from "react-hot-toast";
 import { Activity, Send, ShieldAlert, Lock, Clock, Calendar } from "lucide-react";
+import { motion, Variants } from "framer-motion";
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export default function LawyerDashboard() {
   const [activeDocId, setActiveDocId] = useState<string>("");
@@ -62,8 +73,13 @@ export default function LawyerDashboard() {
   };
 
   return (
-    <div className="flex flex-col gap-10 py-4">
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <motion.div 
+      className="flex flex-col gap-10 py-4"
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+    >
+      <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <h2 className="text-3xl font-serif text-foreground mb-2">Lawyer Dashboard</h2>
           <p className="text-sm text-muted-foreground max-w-md italic">
@@ -74,19 +90,19 @@ export default function LawyerDashboard() {
           <ShieldAlert className="w-4 h-4 text-primary" />
           <span className="text-xs font-medium text-foreground/70 tracking-tight">Active Protocols: 2</span>
         </div>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
          <div className="lg:col-span-12 xl:col-span-7 flex flex-col gap-8">
-            {/* Document Upload */}
-            <FileUpload 
-              title="Secure Document Upload" 
-              endpoint="/documents/upload" 
-              onSuccess={handleDocumentSuccess} 
-            />
+            <motion.div variants={itemVariants}>
+              <FileUpload 
+                title="Secure Document Upload" 
+                endpoint="/documents/upload" 
+                onSuccess={handleDocumentSuccess} 
+              />
+            </motion.div>
 
-            {/* QR Viewer & Metadata */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <motion.div variants={itemVariants} className="grid grid-cols-1 md:grid-cols-2 gap-8">
               <div className="flex flex-col gap-4">
                 <div className="flex items-center gap-2 px-2">
                   <h3 className="text-sm font-semibold text-foreground uppercase tracking-wider">Verification QR</h3>
@@ -101,22 +117,26 @@ export default function LawyerDashboard() {
                 </div>
                 
                 {activeDocId ? (
-                  <div className="flex flex-col gap-6 relative before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-[1px] before:bg-border">
-                     <div className="flex items-start gap-4 relative">
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    className="flex flex-col gap-6 relative before:absolute before:left-[7px] before:top-2 before:bottom-2 before:w-[1px] before:bg-border"
+                  >
+                     <motion.div initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.1 }} className="flex items-start gap-4 relative">
                         <div className="w-4 h-4 rounded-full bg-emerald-500 border-4 border-background z-10" />
                         <div className="flex flex-col">
                            <span className="text-sm font-medium text-foreground">Document Created & Hashed</span>
                            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">{new Date().toLocaleTimeString()}</span>
                         </div>
-                     </div>
-                     <div className="flex items-start gap-4 relative opacity-40">
+                     </motion.div>
+                     <motion.div initial={{ x: -10, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ delay: 0.2 }} className="flex items-start gap-4 relative opacity-40">
                         <div className="w-4 h-4 rounded-full bg-muted border-4 border-background z-10" />
                         <div className="flex flex-col">
                            <span className="text-sm font-medium text-foreground">Awaiting Digital Signatures</span>
                            <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-bold">STATION_ID: {activeDocId.substring(0, 8)}</span>
                         </div>
-                     </div>
-                  </div>
+                     </motion.div>
+                  </motion.div>
                 ) : (
                   <div className="flex-1 flex flex-col items-center justify-center text-muted-foreground/30 gap-3 grayscale opacity-50">
                     <Activity className="w-8 h-8" />
@@ -124,13 +144,11 @@ export default function LawyerDashboard() {
                   </div>
                 )}
               </div>
-            </div>
+            </motion.div>
          </div>
 
-         {/* Right column: Protocols */}
          <div className="lg:col-span-12 xl:col-span-5 flex flex-col gap-8">
-            {/* Dead Man's Switch */}
-            <div className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-sm">
+            <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-sm">
                <div className="flex items-center justify-between">
                  <div className="flex items-center gap-2">
                    <Lock className="w-5 h-5 text-red-500" />
@@ -167,17 +185,18 @@ export default function LawyerDashboard() {
                  </div>
                </div>
 
-               <button 
+               <motion.button 
+                 whileHover={{ scale: 1.02 }}
+                 whileTap={{ scale: 0.98 }}
                  disabled={switchLoading} 
                  onClick={handleDeadManSubmit} 
-                 className="w-full py-3 bg-red-500 text-white text-sm font-bold rounded-xl hover:bg-red-600 disabled:opacity-30 transition-all shadow-sm shadow-red-500/10 active:scale-[0.98]"
+                 className="w-full py-3 bg-red-500 text-white text-sm font-bold rounded-xl hover:bg-red-600 disabled:opacity-30 transition-all shadow-sm shadow-red-500/10"
                >
                   {switchLoading ? "Arming Protocol..." : "Arm Cryptographic Switch"}
-               </button>
-            </div>
+               </motion.button>
+            </motion.div>
 
-            {/* Time Capsule */}
-            <div className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-sm">
+            <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-6 flex flex-col gap-6 shadow-sm">
                <div className="flex items-center justify-between">
                  <div className="flex items-center gap-2">
                    <Clock className="w-5 h-5 text-primary" />
@@ -218,16 +237,18 @@ export default function LawyerDashboard() {
                  </div>
                </div>
 
-               <button 
+               <motion.button 
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
                 disabled={capsuleLoading} 
                 onClick={handleTimeCapsule} 
                 className="w-full py-3 bg-foreground text-background text-sm font-bold rounded-xl hover:opacity-90 disabled:opacity-30 transition-all flex items-center justify-center gap-2 shadow-sm"
                >
                   {capsuleLoading ? "Seal Encrypting..." : <><Send className="w-4 h-4" /> Initialize Time Lock</>}
-               </button>
-            </div>
+               </motion.button>
+            </motion.div>
          </div>
       </div>
-    </div>
+    </motion.div>
   );
 }

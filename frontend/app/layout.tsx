@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/ThemeProvider";
+import { CustomCursor } from "@/components/CustomCursor";
+import { AnimatedBackground } from "@/components/AnimatedBackground";
 
-const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-inter" });
+const jakarta = Plus_Jakarta_Sans({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700", "800"], variable: "--font-jakarta" });
 
 export const metadata: Metadata = {
   title: "Objection.ai — Legal Document Security",
@@ -17,9 +19,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={inter.variable}>
-      <body className="m-0 p-0 overflow-x-hidden font-sans antialiased transition-colors duration-300">
+    <html lang="en" suppressHydrationWarning className={jakarta.variable}>
+      <body className="m-0 p-0 overflow-x-hidden font-sans antialiased transition-colors duration-300 relative">
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem={false}>
+          <CustomCursor imageUrl="/gavel.png" />
+          <AnimatedBackground />
           {children}
           <Toaster 
             position="top-right" 

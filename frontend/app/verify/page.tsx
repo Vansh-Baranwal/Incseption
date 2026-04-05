@@ -5,12 +5,23 @@ import Link from "next/link";
 import { ShieldCheck, ShieldAlert, Search, Upload, ArrowLeft } from "lucide-react";
 import toast from "react-hot-toast";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { motion, Variants } from "framer-motion";
 
 interface VerificationResult {
   status: "authentic" | "tampered";
   hash: string;
   timestamp: string;
 }
+
+const containerVariants: Variants = {
+  hidden: { opacity: 0 },
+  show: { opacity: 1, transition: { staggerChildren: 0.15, delayChildren: 0.1 } }
+};
+
+const itemVariants: Variants = {
+  hidden: { opacity: 0, scale: 0.95, y: 20 },
+  show: { opacity: 1, scale: 1, y: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
+};
 
 export default function VerifyPage() {
   const [dataPayload, setDataPayload] = useState("");
@@ -55,14 +66,22 @@ export default function VerifyPage() {
           <Link href="/login" className="text-muted-foreground hover:text-foreground transition-colors hidden md:block">
             Sign In
           </Link>
-          <Link href="/signup" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-bold shadow-sm shadow-primary/10">
+          <Link href="/signup" className="px-4 py-2 bg-primary text-primary-foreground rounded-lg font-bold shadow-sm shadow-primary/10 transition-colors">
             Sign Up
           </Link>
+          <div className="border-l border-border pl-6">
+            <ThemeToggle />
+          </div>
         </div>
       </nav>
 
       <main className="max-w-3xl mx-auto px-6 py-16 md:py-24">
-        <div className="mb-12 text-center flex flex-col items-center gap-4">
+        <motion.div 
+           className="mb-12 text-center flex flex-col items-center gap-4"
+           initial={{ opacity: 0, y: 30 }}
+           animate={{ opacity: 1, y: 0 }}
+           transition={{ duration: 0.6, ease: "easeOut" }}
+        >
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
             <ShieldCheck className="w-8 h-8 text-primary" />
           </div>
@@ -72,10 +91,15 @@ export default function VerifyPage() {
           <p className="text-muted-foreground max-w-lg leading-relaxed italic">
             Check the authenticity of any Objection.ai cryptoseal by entering the verification hash or uploading the original document.
           </p>
-        </div>
+        </motion.div>
 
-        <div className="flex flex-col gap-10">
-          <div className="bg-card border border-border rounded-2xl p-8 md:p-10 shadow-sm">
+        <motion.div 
+           className="flex flex-col gap-10"
+           variants={containerVariants}
+           initial="hidden"
+           animate="show"
+        >
+          <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-8 md:p-10 shadow-sm">
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-2.5">
                 <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Cryptographic Hash or URL</label>
@@ -117,18 +141,25 @@ export default function VerifyPage() {
                 </div>
               </div>
 
-              <button
+              <motion.button
                 onClick={handleVerify}
                 disabled={loading}
-                className="w-full py-4 bg-primary text-primary-foreground text-sm font-bold rounded-xl hover:opacity-90 disabled:opacity-50 transition-all shadow-lg shadow-primary/10 active:scale-[0.98]"
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                className="w-full py-4 bg-primary text-primary-foreground text-sm font-bold rounded-xl hover:opacity-90 disabled:opacity-50 transition-all shadow-lg shadow-primary/10"
               >
                 {loading ? "Decrypting & Verifying..." : "Check Integrity"}
-              </button>
+              </motion.button>
             </div>
-          </div>
+          </motion.div>
 
           {result && (
-             <div className={`p-8 bg-card border-2 rounded-2xl flex flex-col md:flex-row items-center md:items-start gap-6 shadow-sm transition-all duration-500 animate-in fade-in slide-in-from-bottom-2 ${result.status === "authentic" ? "border-emerald-500/20" : "border-red-500/20"}`}>
+             <motion.div 
+               initial={{ opacity: 0, y: 20, scale: 0.95 }}
+               animate={{ opacity: 1, y: 0, scale: 1 }}
+               transition={{ type: "spring", stiffness: 300, damping: 20 }}
+               className={`p-8 bg-card border-2 rounded-2xl flex flex-col md:flex-row items-center md:items-start gap-6 shadow-sm transition-colors duration-500 ${result.status === "authentic" ? "border-emerald-500/20" : "border-red-500/20"}`}
+             >
                 <div className={`p-4 rounded-2xl ${result.status === "authentic" ? "bg-emerald-500/10" : "bg-red-500/10"}`}>
                   {result.status === "authentic" ? (
                      <ShieldCheck className="w-10 h-10 text-emerald-500" />
@@ -154,9 +185,9 @@ export default function VerifyPage() {
                       </div>
                    </div>
                 </div>
-             </div>
+             </motion.div>
           )}
-        </div>
+        </motion.div>
       </main>
 
       <footer className="py-12 border-t border-border flex flex-col items-center gap-4 text-center px-6">
