@@ -30,14 +30,14 @@ const features = [
 
 export default function HomeFooter() {
   return (
-    <section className="relative bg-[#1a1410] text-[#e8e4df]">
+    <section className="relative bg-background text-foreground transition-colors duration-300">
       {/* Features */}
       <div className="max-w-6xl mx-auto px-6 md:px-12 py-24">
         <div className="mb-16">
           <h2 className="text-3xl md:text-5xl font-serif mb-4">
             Why Objection.ai
           </h2>
-          <p className="text-white/40 text-lg max-w-xl">
+          <p className="text-muted-foreground text-lg max-w-xl">
             The cryptographic foundation for modern justice.
           </p>
         </div>
@@ -46,12 +46,12 @@ export default function HomeFooter() {
           {features.map((f) => {
             const Icon = f.icon;
             return (
-              <div key={f.title} className="flex flex-col gap-4">
-                <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-white/5">
-                  <Icon className="w-5 h-5 text-amber-600" />
+              <div key={f.title} className="flex flex-col gap-4 group">
+                <div className="w-10 h-10 flex items-center justify-center rounded-lg bg-muted/50 group-hover:bg-primary/10 transition-colors">
+                  <Icon className="w-5 h-5 text-primary" />
                 </div>
                 <h3 className="text-lg font-medium">{f.title}</h3>
-                <p className="text-sm text-white/40 leading-relaxed">
+                <p className="text-sm text-muted-foreground leading-relaxed">
                   {f.description}
                 </p>
               </div>
@@ -61,21 +61,21 @@ export default function HomeFooter() {
       </div>
 
       {/* CTA */}
-      <div className="bg-[#231c15] border-y border-white/5">
+      <div className="bg-muted/30 border-y border-border">
         <div className="max-w-4xl mx-auto px-6 py-20 text-center flex flex-col items-center gap-8">
-          <h2 className="text-2xl md:text-4xl font-serif italic text-white/90">
+          <h2 className="text-2xl md:text-4xl font-serif italic text-foreground/80">
             &ldquo;In a world of deepfakes, trust the math.&rdquo;
           </h2>
           <div className="flex flex-wrap gap-4 justify-center">
             <Link
               href="/signup"
-              className="px-8 py-3 bg-white text-[#1a1410] text-sm font-medium rounded-md hover:bg-white/90 transition-colors"
+              className="px-8 py-3 bg-foreground text-background text-sm font-medium rounded-md hover:opacity-90 transition-all font-sans"
             >
               Get Started
             </Link>
             <Link
               href="/login"
-              className="px-8 py-3 border border-white/15 text-white text-sm rounded-md hover:bg-white/5 transition-colors"
+              className="px-8 py-3 border border-border text-foreground text-sm rounded-md hover:bg-muted transition-colors font-sans"
             >
               Sign In
             </Link>
@@ -84,19 +84,19 @@ export default function HomeFooter() {
       </div>
 
       {/* Footer */}
-      <footer className="border-t border-white/5">
+      <footer className="border-t border-border">
         <div className="max-w-6xl mx-auto px-6 md:px-12 py-12 flex flex-col md:flex-row items-center justify-between gap-6">
-          <span className="text-lg font-serif text-white/80">Objection.ai</span>
+          <span className="text-lg font-serif text-foreground/80">Objection.ai</span>
           
-          <div className="flex items-center gap-8 text-sm text-white/40">
+          <div className="flex items-center gap-8 text-sm text-muted-foreground">
             {["Verify", "Policies", "Sign In"].map(item => (
-              <Link key={item} href={`/${item === "Sign In" ? "login" : item.toLowerCase()}`} className="hover:text-white transition-colors">
+              <Link key={item} href={`/${item === "Sign In" ? "login" : item.toLowerCase()}`} className="hover:text-foreground transition-colors">
                 {item}
               </Link>
             ))}
           </div>
 
-          <div className="text-xs text-white/20">
+          <div className="text-xs text-muted-foreground/40">
             &copy; {new Date().getFullYear()} Objection.ai
           </div>
         </div>

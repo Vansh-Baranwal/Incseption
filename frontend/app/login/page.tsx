@@ -41,25 +41,25 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#1a1410] p-6 text-[#e8e4df]">
+    <div className="flex min-h-screen items-center justify-center bg-background p-6 text-foreground transition-colors duration-300">
       <div className="w-full max-w-sm">
         <div className="text-center mb-10">
           <Link href="/">
-             <h1 className="text-2xl font-serif text-white cursor-pointer mb-1">Objection.ai</h1>
+             <h1 className="text-2xl font-serif text-foreground cursor-pointer mb-1">Objection.ai</h1>
           </Link>
-          <p className="text-sm text-white/40">Sign in to your account</p>
+          <p className="text-sm text-muted-foreground">Sign in to your account</p>
         </div>
 
-        <div className="bg-white/5 border border-white/8 rounded-xl p-8">
+        <div className="bg-card border border-border rounded-xl p-8 shadow-sm">
           <form onSubmit={handleLogin} className="flex flex-col gap-6">
             {/* Role selector */}
-            <div className="flex bg-black/30 rounded-lg p-1 gap-1">
+            <div className="flex bg-muted rounded-lg p-1 gap-1">
               {(["citizen", "lawyer", "admin"] as Role[]).map((r) => (
                  <button
                    key={r}
                    type="button"
                    onClick={() => setRole(r)}
-                   className={`flex-1 py-2 text-sm capitalize rounded-md transition-all ${role === r ? "bg-white text-[#1a1410] font-medium" : "text-white/40 hover:text-white"}`}
+                   className={`flex-1 py-2 text-sm capitalize rounded-md transition-all ${role === r ? "bg-background text-foreground shadow-sm font-medium" : "text-muted-foreground hover:text-foreground"}`}
                  >
                    {r}
                  </button>
@@ -67,25 +67,25 @@ export default function LoginPage() {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm text-white/50">Email</label>
+              <label className="text-sm text-muted-foreground font-medium">Email</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 bg-black/30 border border-white/8 rounded-lg text-white text-sm focus:outline-none focus:border-white/20 transition-colors placeholder:text-white/15"
+                className="w-full px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/50 transition-all placeholder:text-muted-foreground/30"
                 placeholder="you@example.com"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-sm text-white/50">Password</label>
+              <label className="text-sm text-muted-foreground font-medium">Password</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-4 py-3 bg-black/30 border border-white/8 rounded-lg text-white text-sm focus:outline-none focus:border-white/20 transition-colors placeholder:text-white/15"
+                className="w-full px-4 py-3 bg-muted/50 border border-border rounded-lg text-foreground text-sm focus:outline-none focus:ring-1 focus:ring-primary/20 focus:border-primary/50 transition-all placeholder:text-muted-foreground/30"
                 placeholder="••••••••"
               />
             </div>
@@ -93,16 +93,16 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 bg-white text-[#1a1410] text-sm font-medium rounded-lg hover:bg-white/90 disabled:opacity-50 transition-colors"
+              className="w-full py-3 bg-primary text-primary-foreground text-sm font-medium rounded-lg hover:opacity-90 disabled:opacity-50 transition-all"
             >
               {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
-          <div className="mt-8 pt-6 border-t border-white/5 text-center">
-            <p className="text-sm text-white/30">
+          <div className="mt-8 pt-6 border-t border-border text-center">
+            <p className="text-sm text-muted-foreground">
               Don&apos;t have an account?{" "}
-              <Link href="/signup" className="text-white/70 hover:text-white transition-colors">
+              <Link href="/signup" className="text-foreground font-medium hover:underline transition-colors">
                 Sign up
               </Link>
             </p>

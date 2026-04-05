@@ -17,22 +17,26 @@ export default function DashboardLayout({
 
   useEffect(() => {
     setMounted(true);
-    if (!token) {
+    if (mounted && !token) {
       router.push("/login");
     }
-  }, [token, router]);
+  }, [token, router, mounted]);
 
-  if (!mounted || !token) {
-    return <div className="min-h-screen bg-[#1a1410]" />;
+  if (!mounted) {
+    return <div className="min-h-screen bg-background" />;
+  }
+
+  if (!token) {
+     return <div className="min-h-screen bg-background" />;
   }
 
   return (
-    <div className="flex h-screen w-full bg-[#1a1410] text-[#e8e4df] overflow-hidden">
+    <div className="flex h-screen w-full bg-background text-foreground overflow-hidden transition-colors duration-300">
       <Sidebar />
       <div className="flex flex-col flex-1 min-w-0">
         <Navbar />
-        <main className="flex-1 overflow-y-auto p-6 md:p-8">
-          <div className="mx-auto max-w-5xl w-full">
+        <main className="flex-1 overflow-y-auto">
+          <div className="p-6 md:p-8 lg:p-10 mx-auto max-w-7xl w-full">
              {children}
           </div>
         </main>

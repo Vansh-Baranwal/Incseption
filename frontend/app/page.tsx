@@ -4,7 +4,7 @@ import HomeFooter from "@/components/HomeFooter";
 
 export default function Home() {
   return (
-    <main className="w-full relative m-0 p-0 bg-[#1a1410]">
+    <main className="w-full relative m-0 p-0 bg-background transition-colors duration-300">
       <HomeNavbar />
       <HeroCanvasAnimation />
       <HomeFooter />
