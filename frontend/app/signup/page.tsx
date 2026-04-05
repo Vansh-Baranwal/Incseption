@@ -7,11 +7,15 @@ import toast from "react-hot-toast";
 import Link from "next/link";
 import { Loader2 } from "lucide-react";
 
+type Role = "citizen" | "lawyer";
+
 export default function SignupPage() {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [aadhaar, setAadhaar] = useState("");
-  const [password, setPassword] = useState("");
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: "citizen" as Role,
+  });
   const [loading, setLoading] = useState(false);
 
   const router = useRouter();
@@ -21,16 +25,14 @@ export default function SignupPage() {
     setLoading(true);
 
     try {
-      const payload = { name, email, aadhaar, password };
-      // Explicitly define as citizen sign up since role checks map implicitly for now
       await apiFetch("/auth/signup", {
         method: "POST",
-        body: payload,
+        body: formData,
         requireAuth: false,
       });
 
-      toast.success("Registration Successful!");
-      router.push(`/login`);
+      toast.success("Identity Sequence Initialized");
+      router.push("/login");
     } catch (error: any) {
       toast.error(error.message);
     } finally {
@@ -39,76 +41,89 @@ export default function SignupPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#0F172A] p-4 text-[#F8FAFC]">
-      <div className="w-full max-w-md bg-[#1E293B] border border-[#334155] rounded-xl p-8 shadow-2xl">
-        <div className="text-center mb-8">
+    <div className="flex min-h-screen items-center justify-center bg-[#020617] p-6 text-[#F8FAFC]">
+      {/* Cinematic Background elements */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#D4AF37]/5 blur-[120px] rounded-full" />
+        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full" />
+      </div>
+
+      <div className="w-full max-w-md relative z-10">
+        <div className="text-center mb-12">
           <Link href="/">
-             <h1 className="text-3xl font-serif text-[#C6A75E] font-bold tracking-tight cursor-pointer">Objection.ai</h1>
+             <h1 className="text-3xl font-serif text-[#D4AF37] font-bold tracking-[0.2em] uppercase cursor-pointer mb-2">Objection</h1>
           </Link>
-          <p className="text-[#94A3B8] text-sm mt-2">Register a new citizen account</p>
+          <div className="h-px w-12 bg-[#D4AF37]/30 mx-auto mb-4" />
+          <p className="text-[#F8FAFC]/40 text-[10px] uppercase tracking-[0.3em] font-bold">New Entity Registration</p>
         </div>
 
-        <form onSubmit={handleSignup} className="flex flex-col gap-5">
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-[#94A3B8]">Full Name</label>
-            <input
-              type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className="w-full px-4 py-3 bg-[#020617] border border-[#334155] rounded-lg text-[#F8FAFC] focus:outline-none focus:border-[#C6A75E] transition-colors"
-              placeholder="John Doe"
-            />
-          </div>
+        <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl p-10 shadow-2xl">
+          <form onSubmit={handleSignup} className="flex flex-col gap-6">
+            <div className="flex bg-black/40 rounded-full p-1 border border-white/5 gap-1">
+              {(["citizen", "lawyer"] as Role[]).map((r) => (
+                 <button
+                   key={r}
+                   type="button"
+                   onClick={() => setFormData({ ...formData, role: r })}
+                   className={`flex-1 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-500 ${formData.role === r ? "bg-[#D4AF37] text-[#020617]" : "text-[#F8FAFC]/40 hover:text-[#F8FAFC]"}`}
+                 >
+                   {r}
+                 </button>
+              ))}
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-[#94A3B8]">Email Address</label>
-            <input
-              type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 bg-[#020617] border border-[#334155] rounded-lg text-[#F8FAFC] focus:outline-none focus:border-[#C6A75E] transition-colors"
-              placeholder="name@example.com"
-            />
-          </div>
-          
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-[#94A3B8]">Aadhaar Number</label>
-            <input
-              type="text"
-              required
-              value={aadhaar}
-              onChange={(e) => setAadhaar(e.target.value)}
-              className="w-full px-4 py-3 bg-[#020617] border border-[#334155] rounded-lg text-[#F8FAFC] focus:outline-none focus:border-[#C6A75E] transition-colors"
-              placeholder="1234 5678 9012"
-            />
-          </div>
+            <div className="flex flex-col gap-3">
+              <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Full Legal Name</label>
+              <input
+                type="text"
+                required
+                value={formData.name}
+                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                className="w-full px-5 py-3.5 bg-white/5 border border-white/10 rounded-xl text-[#F8FAFC] text-sm focus:outline-none focus:border-[#D4AF37]/50 transition-all placeholder:text-white/10"
+                placeholder="John Doe"
+              />
+            </div>
 
-          <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-[#94A3B8]">Password</label>
-            <input
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 bg-[#020617] border border-[#334155] rounded-lg text-[#F8FAFC] focus:outline-none focus:border-[#C6A75E] transition-colors"
-              placeholder="••••••••"
-            />
+            <div className="flex flex-col gap-3">
+              <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Identity Identifier (Email)</label>
+              <input
+                type="email"
+                required
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                className="w-full px-5 py-3.5 bg-white/5 border border-white/10 rounded-xl text-[#F8FAFC] text-sm focus:outline-none focus:border-[#D4AF37]/50 transition-all placeholder:text-white/10"
+                placeholder="name@nexus.com"
+              />
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Access Protocol (Password)</label>
+              <input
+                type="password"
+                required
+                value={formData.password}
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                className="w-full px-5 py-3.5 bg-white/5 border border-white/10 rounded-xl text-[#F8FAFC] text-sm focus:outline-none focus:border-[#D4AF37]/50 transition-all placeholder:text-white/10"
+                placeholder="••••••••"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={loading}
+              className="group relative w-full py-4 mt-2 overflow-hidden rounded-xl border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] font-bold hover:text-[#020617] transition-colors duration-500"
+            >
+              <span className="relative z-10">{loading ? "Synchronizing..." : "Initialize Identity"}</span>
+              <div className="absolute inset-0 bg-[#D4AF37] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+            </button>
+          </form>
+
+          <div className="mt-8 pt-8 border-t border-white/5 text-center">
+            <p className="text-[10px] font-bold tracking-[0.1em] text-[#F8FAFC]/20">
+              Existing entity? <Link href="/login" className="text-[#D4AF37] hover:text-[#F1D279] transition-colors ml-1 uppercase">Access Portal</Link>
+            </p>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-[#C6A75E] text-[#0F172A] font-semibold rounded-lg hover:bg-opacity-90 transition-all flex justify-center items-center gap-2 mt-2"
-          >
-            {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : "Complete Registration"}
-          </button>
-        </form>
-
-        <p className="text-center text-sm text-[#94A3B8] mt-6">
-          Already have an account? <Link href="/login" className="text-[#C6A75E] hover:underline">Sign In</Link>
-        </p>
+        </div>
       </div>
     </div>
   );

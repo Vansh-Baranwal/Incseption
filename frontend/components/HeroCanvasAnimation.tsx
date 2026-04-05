@@ -9,6 +9,7 @@ import {
   useVelocity,
   useMotionValueEvent,
 } from "framer-motion";
+import Link from "next/link";
 
 const TOTAL_FRAMES = 56;
 const FRAME_PATH = '/ezgif-frame';
@@ -140,24 +141,23 @@ export default function HeroCanvasAnimation() {
   const op4 = useTransform(scrollYProgress, [0.85, 0.92, 0.98, 1], [0, 1, 1, 0]);
 
   return (
-    <div ref={containerRef} className="relative h-[400vh] bg-[#0F172A] w-full">
+    <div ref={containerRef} className="relative h-[400vh] bg-[#020617] w-full">
       {/* Loading Screen */}
       {!isLoaded && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0F172A] text-[#F8FAFC]">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#020617] text-[#F8FAFC]">
           <div className="flex flex-col items-center gap-4">
-            <div className="text-3xl font-serif text-[#C6A75E]">Objection.ai</div>
-            <div className="text-lg font-sans text-[#F8FAFC]/70">Loading Environment {loadProgress}%</div>
+            <div className="text-4xl font-serif text-[#D4AF37] tracking-wider">OBJECTION</div>
+            <div className="text-sm font-sans tracking-[0.2em] uppercase text-[#F8FAFC]/40 font-light">Initializing Environment {loadProgress}%</div>
           </div>
         </div>
       )}
 
       {/* Sticky Canvas & Viewport */}
-      {/* We only render children visually once the component has loaded */}
-      <div className={`sticky top-0 h-screen w-full overflow-hidden pointer-events-none flex items-center justify-center transition-opacity duration-500 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`sticky top-0 h-screen w-full overflow-hidden pointer-events-none flex items-center justify-center transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         
         {/* Anti-gravity container */}
         <motion.div
-          className="absolute inset-0 w-full h-full flex items-center justify-center"
+          className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#081429]"
           style={{ y: yOffset }}
         >
           <canvas
@@ -165,28 +165,34 @@ export default function HeroCanvasAnimation() {
             className="block"
             style={{ width: "100%", height: "100%", objectFit: "contain" }}
           />
+
+          {/* Cinematic Mask / Vignette to hide watermark and blend edges */}
+          <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_center,transparent_0%,rgba(2,6,23,0.2)_60%,rgba(2,6,23,0.8)_100%)]" />
+          
+          {/* Watermark Blocker (Bottom Right) */}
+          <div className="absolute bottom-0 right-0 w-32 h-16 bg-[#020617] blur-2xl opacity-80" />
         </motion.div>
 
-        {/* Text Overlays - Re-wrote specific text bounds and removed any unwanted glow/theming */}
+        {/* Text Overlays - Refined Typography & Spacing */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <motion.div style={{ opacity: op1 }} className="absolute text-center px-4 w-full">
-            <h1 className="text-5xl md:text-7xl font-serif text-[#F8FAFC] tracking-tight">Justice, Delivered</h1>
+            <h1 className="text-5xl md:text-8xl font-serif text-[#F8FAFC] tracking-tight leading-tight">Justice, <span className="italic text-[#D4AF37]">Redefined</span></h1>
           </motion.div>
 
           <motion.div style={{ opacity: op2 }} className="absolute text-center px-4 w-full">
-            <h2 className="text-4xl md:text-6xl font-serif text-[#F8FAFC]">Every Document Matters</h2>
+            <h2 className="text-4xl md:text-6xl font-serif text-[#F8FAFC] leading-tight">Every Document <br/> <span className="text-[#D4AF37]">Is Truth</span></h2>
           </motion.div>
 
           <motion.div style={{ opacity: op3 }} className="absolute text-center px-4 w-full">
-            <h2 className="text-4xl md:text-6xl font-serif text-[#F8FAFC]">Immutable. Verifiable. Secure.</h2>
+            <h2 className="text-4xl md:text-6xl font-serif text-[#F8FAFC] tracking-tight">Immutable. Verifiable. <br/> <span className="italic">Absolute.</span></h2>
           </motion.div>
 
-          <motion.div style={{ opacity: op4 }} className="absolute text-center pointer-events-auto px-4 w-full flex flex-col items-center justify-center gap-10">
-            <h2 className="text-5xl md:text-7xl font-serif text-[#F8FAFC]">Secure Your Evidence</h2>
-            {/* CTA Button without excessive animations */}
-            <button className="px-8 py-4 bg-[#C6A75E] text-[#0F172A] font-sans text-lg font-semibold rounded hover:bg-opacity-90 transition-colors duration-300 pointer-events-auto">
-              Secure Your Evidence
-            </button>
+          <motion.div style={{ opacity: op4 }} className="absolute text-center pointer-events-auto px-4 w-full flex flex-col items-center justify-center gap-12">
+            <h2 className="text-5xl md:text-8xl font-serif text-[#F8FAFC] tracking-tighter">Enter The Vault</h2>
+            <Link href="/login" className="group relative px-10 py-5 bg-transparent overflow-hidden rounded-full border border-[#D4AF37]/50 text-[#D4AF37] font-sans text-xs tracking-[0.3em] uppercase font-bold hover:text-[#020617] transition-colors duration-500 pointer-events-auto">
+              <span className="relative z-10">Access Portal</span>
+              <div className="absolute inset-0 bg-[#D4AF37] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+            </Link>
           </motion.div>
         </div>
       </div>

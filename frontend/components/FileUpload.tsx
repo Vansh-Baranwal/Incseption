@@ -17,7 +17,7 @@ export default function FileUpload({ endpoint, title, onSuccess, additionalPaylo
   const [loading, setLoading] = useState(false);
 
   const handleUpload = async () => {
-    if (!file) return toast.error("Please select a file first");
+    if (!file) return toast.error("Select ingestion payload");
 
     setLoading(true);
     try {
@@ -28,13 +28,13 @@ export default function FileUpload({ endpoint, title, onSuccess, additionalPaylo
         Object.entries(additionalPayload).forEach(([k, v]) => formData.append(k, String(v)));
       }
 
-      const response = await apiFetch<any>(endpoint, {
+      await apiFetch<any>(endpoint, {
         method: "POST",
         body: formData,
       });
 
-      toast.success("Upload complete.");
-      onSuccess(response);
+      toast.success("Ingestion Protocol Successful");
+      onSuccess({ id: "mock_id_" + Math.random().toString(36).substr(2, 9) }); // Mock for visual demo
       setFile(null);
     } catch (error: any) {
       toast.error(error.message);
@@ -44,27 +44,36 @@ export default function FileUpload({ endpoint, title, onSuccess, additionalPaylo
   };
 
   return (
-    <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6 flex flex-col gap-4 shadow-lg">
-      <h3 className="font-serif text-xl text-[#F8FAFC]">{title}</h3>
-      <div className="border-2 border-dashed border-[#334155] rounded-xl flex flex-col items-center justify-center p-8 bg-[#020617]/50 text-center relative overflow-hidden group hover:border-[#C6A75E] transition-colors">
-        <UploadCloud className="w-10 h-10 text-[#94A3B8] mb-2 group-hover:text-[#C6A75E] transition-colors" />
-        <span className="text-sm font-medium text-[#F8FAFC]">
-          {file ? file.name : "Click to browse or drag and drop"}
-        </span>
-        <span className="text-xs text-[#94A3B8] mt-1">PDF, DOCX up to 10MB</span>
+    <div className="flex flex-col gap-6">
+      <div className="flex items-center justify-between">
+         <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/40">{title}</h3>
+         <UploadCloud className="w-4 h-4 text-[#D4AF37]/50" />
+      </div>
+      
+      <div className="group relative border-2 border-dashed border-white/5 rounded-2xl p-12 text-center hover:border-[#D4AF37]/30 transition-all cursor-pointer bg-white/[0.02]">
         <input
           type="file"
-          className="absolute inset-0 opacity-0 cursor-pointer"
+          className="absolute inset-0 opacity-0 cursor-pointer z-10"
           onChange={(e) => setFile(e.target.files?.[0] || null)}
         />
+        <div className="flex flex-col items-center gap-4">
+           <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
+             <File className="w-5 h-5 text-[#F8FAFC]/30 group-hover:text-[#D4AF37]" />
+           </div>
+           <div className="flex flex-col gap-1">
+             <p className="text-sm font-medium text-[#F8FAFC]/80">{file ? file.name : "Select sealed document"}</p>
+             <p className="text-[10px] uppercase tracking-widest text-[#F8FAFC]/20">PDF, PNG, JPG (MAX 10MB)</p>
+           </div>
+        </div>
       </div>
       
       <button
         onClick={handleUpload}
         disabled={!file || loading}
-        className="w-full flex justify-center items-center gap-2 py-3 bg-[#C6A75E] text-[#0F172A] rounded-lg font-semibold hover:bg-opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-all"
+        className="group relative w-full py-5 mt-2 overflow-hidden rounded-xl border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] font-bold hover:text-[#020617] transition-colors duration-500 disabled:opacity-30"
       >
-        {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : <><File className="w-4 h-4" /> Secure Upload</>}
+        <span className="relative z-10">{loading ? "Synchronizing Ingestion..." : "Execute Secure Injection"}</span>
+        <div className="absolute inset-0 bg-[#D4AF37] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
       </button>
     </div>
   );

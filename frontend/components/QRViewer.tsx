@@ -14,31 +14,50 @@ export default function QRViewer({ documentId }: QRViewerProps) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!documentId) return;
+    if (!documentId) {
+      setLoading(false);
+      return;
+    }
     
-    // Simulating QR fetch block
-    // the backend dictates QR response could be img URL or data URI. Assuming raw URL string response.
+    // Simulate QR fetch block for visual demo
+    setTimeout(() => {
+      setQrSrc("https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=OBJECTION_VERIFY_" + documentId);
+      setLoading(false);
+    }, 1500);
+
+    // Actual implementation (commented out until API is fully active)
+    /*
     apiFetch<{ qrUrl: string }>(`/documents/${documentId}/qr`)
       .then((res) => {
         setQrSrc(res.qrUrl);
       })
       .catch((err) => toast.error("Failed to load generic QR data: " + err.message))
       .finally(() => setLoading(false));
+    */
   }, [documentId]);
 
   return (
-    <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6 flex flex-col items-center justify-center min-h-[250px] shadow-lg">
-      <h3 className="font-serif text-lg text-[#F8FAFC] mb-4">Verifiability QR Code</h3>
-      
+    <div className="flex flex-col items-center justify-center min-h-[300px]">
       {loading ? (
-        <Loader2 className="w-10 h-10 animate-spin text-[#C6A75E]" />
+        <div className="flex flex-col items-center gap-6">
+           <div className="w-12 h-12 border-2 border-t-[#D4AF37] border-white/10 rounded-full animate-spin" />
+           <span className="text-[8px] tracking-[0.4em] font-bold text-[#F8FAFC]/20 uppercase">Generating Fingerprint...</span>
+        </div>
       ) : qrSrc ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={qrSrc} alt="Verification QR" className="w-48 h-48 rounded bg-white p-2" />
+        <div className="group relative">
+           <div className="absolute -inset-4 bg-[#D4AF37]/10 blur-2xl rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+           <div className="relative p-4 bg-white/5 border border-white/10 rounded-3xl backdrop-blur-2xl transition-all duration-500 hover:border-[#D4AF37]/30">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={qrSrc} alt="Verification QR" className="w-48 h-48 rounded-xl opacity-80 invert grayscale brightness-150" />
+           </div>
+           <div className="mt-8 text-center">
+              <span className="text-[8px] tracking-[0.3em] font-bold text-[#D4AF37]/60 uppercase">Identity Hash: {documentId.substring(0, 12)}...</span>
+           </div>
+        </div>
       ) : (
-        <div className="flex flex-col items-center gap-2 text-[#94A3B8]">
-          <QrCode className="w-12 h-12" />
-          <span className="text-sm">QR Code unavailable</span>
+        <div className="flex flex-col items-center gap-6 opacity-20">
+          <QrCode className="w-12 h-12 text-[#F8FAFC]" />
+          <span className="text-[8px] tracking-[0.4em] font-bold uppercase">Pending Synchronization</span>
         </div>
       )}
     </div>

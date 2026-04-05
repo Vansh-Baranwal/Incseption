@@ -17,8 +17,9 @@ import {
 } from "lucide-react";
 
 export default function Sidebar() {
-  const { role, logout } = useAuthStore((state) => ({
+  const { role, logout, userName } = useAuthStore((state) => ({
     role: state.user?.role,
+    userName: state.user?.name,
     logout: state.logout,
   }));
   const pathname = usePathname();
@@ -30,22 +31,22 @@ export default function Sidebar() {
   };
 
   const citizenLinks = [
-    { name: "Whistleblower Vault", href: "/dashboard/citizen", icon: ShieldAlert },
-    { name: "Nyaya Setu Chat", href: "/dashboard/citizen/chat", icon: MessageSquare },
-    { name: "Legal Vault", href: "/dashboard/citizen/vault", icon: FileText },
+    { name: "VAULT", href: "/dashboard/citizen", icon: ShieldAlert },
+    { name: "NYAYA SETU", href: "/dashboard/citizen/chat", icon: MessageSquare },
+    { name: "DOCUMENTS", href: "/dashboard/citizen/vault", icon: FileText },
   ];
 
   const lawyerLinks = [
-    { name: "Document Upload", href: "/dashboard/lawyer", icon: UploadCloud },
-    { name: "QR Verifier Engine", href: "/dashboard/lawyer/qr", icon: QrCode },
-    { name: "Chain of Custody", href: "/dashboard/lawyer/timeline", icon: Activity },
-    { name: "Dead Man's Switch", href: "/dashboard/lawyer/deadman", icon: FileText },
-    { name: "Time Capsule", href: "/dashboard/lawyer/timecapsule", icon: Archive },
+    { name: "INGESTION", href: "/dashboard/lawyer", icon: UploadCloud },
+    { name: "VERIFIER", href: "/dashboard/lawyer/qr", icon: QrCode },
+    { name: "CUSTODY", href: "/dashboard/lawyer/timeline", icon: Activity },
+    { name: "DEADMAN", href: "/dashboard/lawyer/deadman", icon: FileText },
+    { name: "CAPSULE", href: "/dashboard/lawyer/timecapsule", icon: Archive },
   ];
 
   const adminLinks = [
-    { name: "System Overview", href: "/dashboard/admin", icon: BarChart },
-    { name: "Activity Logs", href: "/dashboard/admin/activity", icon: List },
+    { name: "ANALYTICS", href: "/dashboard/admin", icon: BarChart },
+    { name: "PROTOCOL LOGS", href: "/dashboard/admin/activity", icon: List },
   ];
 
   let links: any[] = [];
@@ -54,14 +55,16 @@ export default function Sidebar() {
   if (role === "admin") links = adminLinks;
 
   return (
-    <aside className="flex flex-col h-full w-64 bg-[#0F172A] border-r border-[#334155]">
-      <div className="flex items-center justify-center py-6 border-b border-[#334155]">
+    <aside className="flex flex-col h-full w-72 bg-[#020617] border-r border-white/5 relative z-20">
+      <div className="px-10 py-10 mb-4">
         <Link href="/">
-           <h1 className="text-2xl font-serif font-bold tracking-tight text-[#C6A75E]">Objection.ai</h1>
+           <h1 className="text-xl font-serif font-bold tracking-[0.2em] uppercase text-[#D4AF37] cursor-pointer">Objection</h1>
         </Link>
+        <p className="text-[10px] tracking-[0.3em] font-bold text-[#F8FAFC]/20 mt-2">LEGAL PROTOCOL V.1.0</p>
       </div>
 
-      <nav className="flex flex-col flex-1 gap-2 p-4 overflow-y-auto">
+      <nav className="flex flex-col flex-1 gap-1 px-6 overflow-y-auto">
+        <div className="text-[10px] font-bold tracking-[0.3em] text-[#F8FAFC]/20 uppercase mb-4 ml-4">Command Center</div>
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = pathname === link.href;
@@ -70,23 +73,36 @@ export default function Sidebar() {
             <Link
               key={link.name}
               href={link.href}
-              className={`flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-sans text-sm
-                ${isActive ? "bg-[#1E293B] text-[#C6A75E] border-l-2 border-[#C6A75E]" : "text-[#94A3B8] hover:bg-[#1E293B]/50 hover:text-[#F8FAFC]"}`}
+              className={`group flex items-center gap-4 px-5 py-3.5 rounded-xl transition-all duration-300 relative
+                ${isActive ? "bg-white/5 text-[#D4AF37] shadow-xl" : "text-[#F8FAFC]/40 hover:text-[#F8FAFC] hover:bg-white/[0.02]"}`}
             >
-              <Icon className="w-5 h-5" />
-              {link.name}
+              <Icon className={`w-4 h-4 transition-colors ${isActive ? "text-[#D4AF37]" : "text-[#F8FAFC]/20 group-hover:text-[#D4AF37]/50"}`} />
+              <span className="text-[10px] font-bold tracking-[0.3em] uppercase">{link.name}</span>
+              {isActive && (
+                <div className="absolute left-0 top-1/4 bottom-1/4 w-0.5 bg-[#D4AF37] rounded-full shadow-[0_0_10px_#D4AF37]" />
+              )}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-4 border-t border-[#334155]">
+      <div className="p-6 border-t border-white/5 bg-black/20">
+        <div className="flex items-center gap-4 px-4 py-4 mb-4 rounded-xl bg-white/5 border border-white/5">
+           <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] font-serif text-xs border border-[#D4AF37]/20">
+             {userName?.charAt(0) || "U"}
+           </div>
+           <div className="flex flex-col truncate">
+             <span className="text-[10px] font-bold tracking-widest uppercase text-[#F8FAFC]/80">{userName || "User Entity"}</span>
+             <span className="text-[8px] tracking-[0.2em] uppercase text-[#F8FAFC]/30">{role || "Protocol Access"}</span>
+           </div>
+        </div>
+
         <button
           onClick={handleLogout}
-          className="flex items-center w-full gap-3 px-4 py-3 text-sm text-[#EF4444] transition-colors rounded-lg hover:bg-[#1E293B]/50"
+          className="group flex items-center w-full gap-4 px-5 py-3.5 text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/30 hover:text-[#EF4444] transition-all rounded-xl hover:bg-red-500/5"
         >
-          <LogOut className="w-5 h-5" />
-          Sign Out
+          <LogOut className="w-4 h-4 transition-colors" />
+          Terminate Session
         </button>
       </div>
     </aside>

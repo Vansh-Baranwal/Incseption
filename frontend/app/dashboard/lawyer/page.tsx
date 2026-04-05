@@ -19,7 +19,7 @@ export default function LawyerDashboard() {
 
   const handleDocumentSuccess = (data: any) => {
     setActiveDocId(data.id || "sample_id");
-    toast.success("Document injected into the Blockchain network");
+    toast.success("Identity injected into Blockchain network");
   };
 
   const handleDeadManSubmit = async () => {
@@ -30,7 +30,7 @@ export default function LawyerDashboard() {
         method: "POST",
         body: { interval: intervalDays, recipients: recipients.split(",") }
       });
-      toast.success("Switch Armed successfully");
+      toast.success("Protocol Armed");
       setRecipients("");
     } catch (err: any) {
       toast.error(err.message);
@@ -51,7 +51,7 @@ export default function LawyerDashboard() {
         method: "POST",
         body: formData
       });
-      toast.success("Legal Time Capsule secured");
+      toast.success("Capsule Secured");
       setCapsuleFile(null);
       setUnlockDate("");
     } catch (err: any) {
@@ -62,79 +62,120 @@ export default function LawyerDashboard() {
   };
 
   return (
-    <div className="flex flex-col gap-8 pb-10">
-      <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-8 shadow-xl">
-        <h2 className="text-3xl font-serif text-[#C6A75E] mb-2">Lawyer Dashboard</h2>
-        <p className="text-[#94A3B8]">Securely issue immutable documents, manage chains of custody, and build logic contracts.</p>
+    <div className="flex flex-col gap-10 pb-20">
+      {/* Cinematic Header */}
+      <div className="relative overflow-hidden bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 md:p-14 shadow-2xl">
+        <div className="absolute top-0 right-0 w-64 h-64 bg-[#D4AF37]/5 blur-[100px] rounded-full -translate-y-1/2 translate-x-1/2" />
+        <div className="relative z-10 max-w-3xl">
+          <div className="h-px w-12 bg-[#D4AF37]/40 mb-6" />
+          <h2 className="text-3xl md:text-5xl font-serif text-[#F8FAFC] mb-4 leading-tight">
+            Counsel <span className="text-[#D4AF37] italic">Ingestion</span> Hub
+          </h2>
+          <p className="text-[#F8FAFC]/40 text-lg font-light leading-relaxed">
+            Securely execute immutable document injections, manage complex chain-of-custody protocols, 
+            and initialize autonomous legal logic contracts.
+          </p>
+        </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-         <div className="flex flex-col gap-8">
-            <FileUpload 
-               title="Blockchain Identity Seal Upload" 
-               endpoint="/documents/upload" 
-               onSuccess={handleDocumentSuccess} 
-            />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+         <div className="flex flex-col gap-10">
+            {/* Document Ingestion */}
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 shadow-2xl">
+               <FileUpload 
+                  title="RECORDS_INGESTION" 
+                  endpoint="/documents/upload" 
+                  onSuccess={handleDocumentSuccess} 
+               />
+            </div>
 
             {/* QR Viewer block */}
-            <QRViewer documentId={activeDocId} />
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 shadow-2xl">
+               <div className="flex items-center justify-between pb-6 border-b border-white/5 mb-6">
+                  <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/40">Verification Fingerprint</h3>
+                  <div className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse shadow-[0_0_8px_#3b82f6]" />
+               </div>
+               <QRViewer documentId={activeDocId} />
+            </div>
 
-            {/* Chain of custody mini block placeholder */}
-            <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6 shadow-lg">
-               <h3 className="font-serif text-lg text-[#F8FAFC] pb-4 flex items-center justify-between border-b border-[#334155]">
-                  Chain of Custody
-                  <Activity className="w-5 h-5 text-[#C6A75E]" />
-               </h3>
+            {/* Chain of custody */}
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 shadow-2xl">
+               <div className="flex items-center justify-between pb-6 border-b border-white/5 mb-6">
+                  <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/40">Active Chain Statistics</h3>
+                  <Activity className="w-4 h-4 text-[#D4AF37]/50" />
+               </div>
                {activeDocId ? (
-                 <div className="mt-4 text-sm text-[#F8FAFC]">
-                   <div className="pl-4 border-l-2 border-[#C6A75E] py-2 mb-2">Document Generated [{new Date().toLocaleTimeString()}]</div>
-                   <div className="pl-4 border-l-2 border-[#334155] py-2 text-[#94A3B8]">Waiting for secondary signatures...</div>
+                 <div className="space-y-6">
+                    <div className="flex items-start gap-4">
+                       <div className="w-2 h-2 rounded-full bg-[#D4AF37] mt-1 shadow-[0_0_8px_#D4AF37]" />
+                       <div className="flex flex-col">
+                          <span className="text-xs font-medium text-[#F8FAFC]/80">Document Generated</span>
+                          <span className="text-[8px] uppercase tracking-widest text-[#F8FAFC]/20 mt-1">{new Date().toLocaleTimeString()}</span>
+                       </div>
+                    </div>
+                    <div className="flex items-start gap-4 opacity-50">
+                       <div className="w-2 h-2 rounded-full bg-white/10 mt-1" />
+                       <div className="flex flex-col">
+                          <span className="text-xs font-medium text-[#F8FAFC]/40">Secondary Validation</span>
+                          <span className="text-[8px] uppercase tracking-widest text-[#F8FAFC]/20 mt-1">Pending Sync...</span>
+                       </div>
+                    </div>
                  </div>
                ) : (
-                 <div className="mt-4 text-sm text-[#94A3B8] text-center">Upload a document to trace custody</div>
+                 <div className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/20 text-center py-10">
+                    IDLE_SYSTEM_PENDING_INPUT
+                 </div>
                )}
             </div>
          </div>
 
-         {/* Advanced Features */}
-         <div className="flex flex-col gap-8">
+         {/* Advanced Logic Contracts */}
+         <div className="flex flex-col gap-10">
             {/* Dead Man's Switch */}
-            <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6 shadow-lg flex flex-col gap-4">
-               <h3 className="font-serif text-xl text-[#F8FAFC]">Dead Man&apos;s Switch</h3>
-               <p className="text-xs text-[#94A3B8]">Automated immutable document dispatch executing securely based on heartbeat failure.</p>
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 shadow-2xl flex flex-col gap-8">
+               <div className="flex items-center justify-between">
+                  <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/40">Protocol: Dead Man Switch</h3>
+                  <span className="text-[8px] tracking-[0.2em] uppercase text-red-500/50">High_Security</span>
+               </div>
                
-               <div className="flex flex-col gap-2">
-                 <label className="text-sm font-medium text-[#F8FAFC]">Heartbeat interval (days)</label>
-                 <input type="number" value={intervalDays} onChange={e => setIntervalDays(Number(e.target.value))} className="bg-[#020617] border border-[#334155] text-sm text-[#F8FAFC] rounded-lg px-4 py-2" />
+               <div className="flex flex-col gap-4">
+                 <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Heartbeat Delta (Days)</label>
+                 <input type="number" value={intervalDays} onChange={e => setIntervalDays(Number(e.target.value))} className="w-full px-5 py-4 bg-black/40 border border-white/10 rounded-xl text-sm text-[#F8FAFC] focus:outline-none focus:border-[#D4AF37]/50 transition-all" />
                </div>
 
-               <div className="flex flex-col gap-2">
-                 <label className="text-sm font-medium text-[#F8FAFC]">Recipient Emails (comma separated)</label>
-                 <input value={recipients} onChange={e => setRecipients(e.target.value)} type="text" className="bg-[#020617] border border-[#334155] text-sm text-[#F8FAFC] rounded-lg px-4 py-2" placeholder="lawyer@firm.com" />
+               <div className="flex flex-col gap-4">
+                 <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Relay Nodes (Emails)</label>
+                 <input value={recipients} onChange={e => setRecipients(e.target.value)} type="text" className="w-full px-5 py-4 bg-black/40 border border-white/10 rounded-xl text-sm text-[#F8FAFC] focus:outline-none focus:border-[#D4AF37]/50 transition-all placeholder:text-white/10" placeholder="lawyer@firm.com" />
                </div>
 
-               <button disabled={switchLoading} onClick={handleDeadManSubmit} className="bg-red-500/20 text-red-500 font-semibold text-sm rounded-lg py-3 mt-2 flex justify-center items-center hover:bg-red-500/30 transition-colors">
-                  {switchLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : "Arm Dead Man's Switch"}
+               <button disabled={switchLoading} onClick={handleDeadManSubmit} className="group relative w-full py-5 mt-4 overflow-hidden rounded-xl border border-red-500/30 text-red-400 text-[10px] uppercase tracking-[0.3em] font-bold hover:bg-red-500/10 transition-colors duration-500">
+                  <span className="relative z-10">{switchLoading ? "ARMING_PROTOCOL..." : "Initialize Protocol Switch"}</span>
                </button>
             </div>
 
             {/* Legal Time Capsule */}
-            <div className="bg-[#1E293B] border border-[#334155] rounded-xl p-6 shadow-lg flex flex-col gap-4">
-               <h3 className="font-serif text-xl text-[#F8FAFC]">Legal Time Capsule</h3>
-               <p className="text-xs text-[#94A3B8]">Lock documents under cryptographic timing logic that guarantees immunity from tampering.</p>
+            <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-3xl p-10 shadow-2xl flex flex-col gap-8">
+               <div className="flex items-center justify-between">
+                  <h3 className="text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/40">Protocol: Time Capsule</h3>
+                  <span className="text-[8px] tracking-[0.2em] uppercase text-blue-500/50">Encryption_Locked</span>
+               </div>
                
-               <div className="flex flex-col gap-2">
-                 <label className="text-sm font-medium text-[#F8FAFC]">Unlock Payload Document</label>
-                 <input onChange={e => setCapsuleFile(e.target.files?.[0] || null)} type="file" className="text-sm text-[#F8FAFC] file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-[#334155] file:text-[#F8FAFC]" />
+               <div className="flex flex-col gap-4">
+                 <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Ingestion Payload</label>
+                 <div className="group relative border border-dashed border-white/10 rounded-xl p-6 text-center hover:border-[#D4AF37]/30 transition-all cursor-pointer bg-white/[0.02]">
+                    <input onChange={e => setCapsuleFile(e.target.files?.[0] || null)} type="file" className="absolute inset-0 opacity-0 cursor-pointer" />
+                    <span className="text-[10px] font-bold tracking-widest text-[#F8FAFC]/30 uppercase">{capsuleFile ? capsuleFile.name : "Select Document"}</span>
+                 </div>
                </div>
 
-               <div className="flex flex-col gap-2">
-                 <label className="text-sm font-medium text-[#F8FAFC]">Release Date</label>
-                 <input value={unlockDate} onChange={e => setUnlockDate(e.target.value)} type="date" className="bg-[#020617] w-full border border-[#334155] text-sm text-[#F8FAFC] rounded-lg px-4 py-2" />
+               <div className="flex flex-col gap-4">
+                 <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Release Protocol Date</label>
+                 <input value={unlockDate} onChange={e => setUnlockDate(e.target.value)} type="date" className="w-full px-5 py-4 bg-black/40 border border-white/10 rounded-xl text-sm text-[#F8FAFC] focus:outline-none focus:border-[#D4AF37]/50 transition-all font-mono" />
                </div>
 
-               <button disabled={capsuleLoading} onClick={handleTimeCapsule} className="bg-[#C6A75E] text-[#0F172A] font-semibold text-sm rounded-lg py-3 mt-2 flex justify-center items-center hover:bg-opacity-90 transition-colors">
-                  {capsuleLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : <><Send className="w-4 h-4 mr-2"/> Encrypt Capsule</>}
+               <button disabled={capsuleLoading} onClick={handleTimeCapsule} className="group relative w-full py-5 mt-4 overflow-hidden rounded-xl border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] font-bold hover:text-[#020617] transition-colors duration-500">
+                  <span className="relative z-10">{capsuleLoading ? "ENCRYPTING_PAYLOAD..." : "Initialize Capsule Sequence"}</span>
+                  <div className="absolute inset-0 bg-[#D4AF37] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
                </button>
             </div>
          </div>
