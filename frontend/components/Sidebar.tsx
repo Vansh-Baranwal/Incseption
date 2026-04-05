@@ -31,22 +31,15 @@ export default function Sidebar() {
   };
 
   const citizenLinks = [
-    { name: "Whistleblower Vault", href: "/dashboard/citizen", icon: ShieldAlert },
-    { name: "Nyaya Setu", href: "/dashboard/citizen/chat", icon: MessageSquare },
-    { name: "Documents", href: "/dashboard/citizen/vault", icon: FileText },
+    { name: "Dashboard", href: "/dashboard/citizen", icon: ShieldAlert },
   ];
 
   const lawyerLinks = [
-    { name: "Upload", href: "/dashboard/lawyer", icon: UploadCloud },
-    { name: "QR Verifier", href: "/dashboard/lawyer/qr", icon: QrCode },
-    { name: "Chain of Custody", href: "/dashboard/lawyer/timeline", icon: Activity },
-    { name: "Dead Man's Switch", href: "/dashboard/lawyer/deadman", icon: FileText },
-    { name: "Time Capsule", href: "/dashboard/lawyer/timecapsule", icon: Archive },
+    { name: "Dashboard", href: "/dashboard/lawyer", icon: UploadCloud },
   ];
 
   const adminLinks = [
-    { name: "Overview", href: "/dashboard/admin", icon: BarChart },
-    { name: "Activity Logs", href: "/dashboard/admin/activity", icon: List },
+    { name: "Dashboard", href: "/dashboard/admin", icon: BarChart },
   ];
 
   let links: any[] = [];
