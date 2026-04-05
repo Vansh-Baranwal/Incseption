@@ -48,15 +48,12 @@ export function CustomCursor({ imageUrl }: { imageUrl?: string }) {
       }}
     >
       <motion.img 
-        src={imageUrl || "/gavel.png"} 
+        src={imageUrl || "/gavel.svg"} 
         alt="" 
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = "/gavel.svg";
-        }}
         className="w-14 h-14 object-contain origin-bottom-left"
         style={{ filter: "drop-shadow(4px 6px 8px rgba(0,0,0,0.4))" }} 
         animate={{
-          rotate: isClicking ? -45 : 0, // Swings down like a gavel
+          rotate: isClicking ? -45 : 0,
           scale: isClicking ? 0.95 : 1,
         }}
         transition={{ 

@@ -35,11 +35,12 @@
     --accent-foreground: #fde68a;
   }
 
-  html {
+  html, body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     scroll-behavior: smooth;
     letter-spacing: -0.05em;
+    font-family: 'Satoshi', sans-serif !important;
   }
 
   body {
@@ -53,6 +54,7 @@
     letter-spacing: -0.08em;
     font-weight: 700;
     line-height: 1.05;
+    font-family: 'Satoshi', sans-serif !important;
   }
 
   ::selection {

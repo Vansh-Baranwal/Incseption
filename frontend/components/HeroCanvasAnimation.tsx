@@ -17,6 +17,7 @@ const FRAME_PATH = '/ezgif-frame';
 
 export default function HeroCanvasAnimation() {
   const { theme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
 
@@ -24,14 +25,19 @@ export default function HeroCanvasAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
 
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
   const springProgress = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 200,
+    damping: 40,
+    restDelta: 0.001
   });
 
   const frameIndex = useTransform(springProgress, [0, 1], [0, TOTAL_FRAMES - 1]);
@@ -129,8 +135,26 @@ export default function HeroCanvasAnimation() {
   const op3 = useTransform(scrollYProgress, [0.55, 0.65, 0.75, 0.85], [0, 1, 1, 0]);
   const op4 = useTransform(scrollYProgress, [0.85, 0.92, 0.98, 1], [0, 1, 1, 0]);
 
-  const vignetteColor = theme === "dark" ? "rgba(26,20,16,0.95)" : "rgba(252,251,249,0.95)";
-  const vignetteMid = theme === "dark" ? "rgba(26,20,16,0.4)" : "rgba(252,251,249,0.4)";
+  // Use 'dark' as default to match the defaultTheme in layout.tsx
+  const vignetteColor = theme === "light" ? "rgba(252,251,249,0.95)" : "rgba(26,20,16,0.95)";
+  const vignetteMid = theme === "light" ? "rgba(252,251,249,0.4)" : "rgba(26,20,16,0.4)";
+
+  // Don't render vignette until mounted to avoid hydration mismatch
+  if (!mounted) {
+    return (
+      <div ref={containerRef} className="relative h-[150vh] bg-background w-full transition-colors duration-300">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
+          <div className="flex flex-col items-center gap-6">
+            <h1 className="text-2xl font-serif text-foreground">Objection.ai</h1>
+            <div className="w-48 h-[2px] bg-foreground/5 rounded-full overflow-hidden">
+              <div className="h-full bg-foreground/30 transition-all duration-200 rounded-full" style={{width: '0%'}} />
+            </div>
+            <p className="text-xs text-foreground/30">0%</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div ref={containerRef} className="relative h-[150vh] bg-background w-full transition-colors duration-300">
@@ -171,47 +195,64 @@ export default function HeroCanvasAnimation() {
           }} />
         </motion.div>
 
-        {/* Text Overlays */}
-        <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <motion.div style={{ opacity: op1 }} className="absolute text-center px-6 w-full max-w-4xl">
+        {/* Text Overlays - Moved to bottom-left corner */}
+        <div className="absolute inset-0 pointer-events-none">
+          <motion.div 
+            style={{ opacity: op1 }} 
+            className="absolute bottom-16 left-8 md:left-16 max-w-2xl"
+          >
             <h1 
-              className="text-4xl md:text-8xl font-sans font-black text-foreground tracking-[-0.08em] leading-[0.9]" 
+              className="text-3xl md:text-7xl font-sans font-black text-foreground tracking-[-0.08em] leading-[0.95]" 
               style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
             >
               Experience Liftoff.
             </h1>
           </motion.div>
 
-          <motion.div style={{ opacity: op2 }} className="absolute text-center px-6 w-full max-w-4xl">
+          <motion.div 
+            style={{ opacity: op2 }} 
+            className="absolute bottom-16 left-8 md:left-16 max-w-2xl"
+          >
             <h2 
-              className="text-3xl md:text-7xl font-sans font-bold text-foreground tracking-[-0.07em] leading-[1]"
+              className="text-2xl md:text-6xl font-sans font-bold text-foreground tracking-[-0.07em] leading-[1.05]"
               style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
             >
               The Next-Generation<br />Justice Protocol.
             </h2>
           </motion.div>
 
-          <motion.div style={{ opacity: op3 }} className="absolute text-center px-6 w-full max-w-4xl">
+          <motion.div 
+            style={{ opacity: op3 }} 
+            className="absolute bottom-16 left-8 md:left-16 max-w-2xl"
+          >
             <h2 
-              className="text-3xl md:text-6xl font-sans text-foreground leading-[1.15]"
+              className="text-2xl md:text-5xl font-sans text-foreground leading-[1.2]"
               style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
             >
               Immutable. Verifiable.<br />Absolute.
             </h2>
           </motion.div>
 
-          <motion.div style={{ opacity: op4 }} className="absolute text-center pointer-events-auto px-6 w-full max-w-4xl flex flex-col items-center gap-8">
+          <motion.div 
+            style={{ opacity: op4 }} 
+            className="absolute bottom-16 left-8 md:left-16 max-w-2xl pointer-events-auto flex flex-col gap-6"
+          >
             <h2 
-              className="text-4xl md:text-7xl font-sans text-foreground"
+              className="text-3xl md:text-6xl font-sans text-foreground leading-[1.1]"
               style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
             >
               Enter The Vault
             </h2>
-            <Link 
-              href="/login" 
-              className="px-8 py-3 bg-foreground text-background text-sm font-medium rounded-md hover:opacity-90 transition-all font-sans hover:scale-105"
-              style={{ boxShadow: "0 0 30px var(--background)" }}
-            >
+            <Link href="/login">
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-3 bg-foreground text-background text-sm font-medium rounded-md transition-all font-sans inline-block"
+                style={{ boxShadow: "0 0 30px var(--background)" }}
+              >
+                Sign In
+              </motion.button>
+            </Link>
               Sign In
             </Link>
           </motion.div>
