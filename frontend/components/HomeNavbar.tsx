@@ -14,25 +14,25 @@ export default function HomeNavbar() {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-8 md:px-16 py-6 transition-all duration-700 ${
+      className={`fixed top-0 left-0 right-0 z-40 flex items-center justify-between px-6 md:px-12 transition-all duration-500 ${
         scrolled
-          ? "bg-[#020617]/80 backdrop-blur-xl border-b border-white/5 py-4 shadow-2xl"
-          : "bg-transparent"
+          ? "bg-[#1a1410]/90 backdrop-blur-md border-b border-white/5 py-4"
+          : "bg-transparent py-6"
       }`}
     >
       <Link href="/">
-        <span className="text-xl md:text-2xl font-serif font-bold text-[#D4AF37] tracking-[0.2em] uppercase cursor-pointer">
-          Objection
+        <span className="text-lg font-serif text-white cursor-pointer">
+          Objection.ai
         </span>
       </Link>
 
-      <div className="flex items-center gap-10">
-        <div className="hidden md:flex items-center gap-8">
+      <div className="flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-6">
           {["Verify", "Policies"].map((item) => (
             <Link
               key={item}
               href={`/${item.toLowerCase()}`}
-              className="text-[10px] font-sans font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/50 hover:text-[#D4AF37] transition-all duration-300"
+              className="text-sm text-white/50 hover:text-white transition-colors"
             >
               {item}
             </Link>
@@ -40,10 +40,9 @@ export default function HomeNavbar() {
         </div>
         <Link
           href="/login"
-          className="group relative px-6 py-2 overflow-hidden rounded-full border border-[#D4AF37]/30 text-[#D4AF37] text-[10px] font-bold tracking-[0.2em] uppercase hover:text-[#020617] transition-colors duration-500"
+          className="px-5 py-2 bg-white text-[#1a1410] text-sm font-medium rounded-md hover:bg-white/90 transition-colors"
         >
-          <span className="relative z-10">Sign In</span>
-          <div className="absolute inset-0 bg-[#D4AF37] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+          Sign In
         </Link>
       </div>
     </nav>

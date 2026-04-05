@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { apiFetch } from "@/lib/api";
-import Navbar from "@/components/Navbar"; // For public/auth consistency if desired, or skip.
 import Link from "next/link";
-import { FileSearch, ShieldCheck, ShieldAlert, Loader2, Search, Upload } from "lucide-react";
+import { ShieldCheck, ShieldAlert, Search, Upload } from "lucide-react";
 import toast from "react-hot-toast";
 
 interface VerificationResult {
@@ -20,101 +19,84 @@ export default function VerifyPage() {
   const [result, setResult] = useState<VerificationResult | null>(null);
 
   const handleVerify = async () => {
-    if (!dataPayload && !file) return toast.error("Provide a QR Code link or upload a document");
+    if (!dataPayload && !file) return toast.error("Enter a link or upload a document");
 
     setLoading(true);
     setResult(null);
     try {
-      // Simulate verification logic for now
       await new Promise((resolve) => setTimeout(resolve, 2000));
       
-      // Mock result for visual verification
       setResult({
         status: "authentic",
         hash: "0x7d8e...f2a1",
         timestamp: new Date().toLocaleString()
       });
       
-      toast.success("Document Integrity: 100% Valid");
+      toast.success("Document verified successfully");
     } catch (error) {
-      toast.error("Verification protocol failed");
+      toast.error("Verification failed");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#020617] text-[#F8FAFC]">
-      {/* Background Ambience */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1000px] h-[500px] bg-[#D4AF37]/5 blur-[120px] rounded-full" />
-      </div>
-
+    <div className="min-h-screen bg-[#1a1410] text-[#e8e4df]">
       {/* Header */}
-      <nav className="relative z-10 px-8 py-6 flex items-center justify-between border-b border-white/5 backdrop-blur-md">
+      <nav className="px-6 md:px-12 py-6 flex items-center justify-between border-b border-white/5">
         <Link href="/">
-          <span className="text-xl font-serif font-bold text-[#D4AF37] tracking-[0.2em] uppercase cursor-pointer">Objection</span>
+          <span className="text-lg font-serif text-white cursor-pointer">Objection.ai</span>
         </Link>
-        <Link href="/login" className="text-[10px] font-bold tracking-[0.2em] uppercase text-[#F8FAFC]/40 hover:text-[#D4AF37] transition-colors">
-          Portal Access
+        <Link href="/login" className="text-sm text-white/40 hover:text-white transition-colors">
+          Sign In
         </Link>
       </nav>
 
-      <main className="relative z-10 max-w-4xl mx-auto px-6 py-24 flex flex-col items-center">
-        <div className="text-center mb-16">
-          <div className="w-16 h-16 rounded-full border border-[#D4AF37]/30 flex items-center justify-center mx-auto mb-8 bg-[#D4AF37]/5">
-             <ShieldCheck className="w-8 h-8 text-[#D4AF37]" />
-          </div>
-          <h1 className="text-4xl md:text-6xl font-serif mb-6 leading-tight">
-            Blockchain <span className="italic">Verification</span>
+      <main className="max-w-2xl mx-auto px-6 py-20">
+        <div className="mb-12">
+          <h1 className="text-3xl md:text-4xl font-serif text-white mb-3">
+            Verify a Document
           </h1>
-          <p className="text-[#F8FAFC]/40 text-lg font-light max-w-2xl mx-auto">
-            Input a cryptographic QR payload or upload a sealed document 
-            to verify its injection status and absolute network integrity.
+          <p className="text-white/40">
+            Enter a QR code link or upload a document to verify its authenticity on the blockchain.
           </p>
         </div>
 
-        <div className="w-full flex flex-col gap-10">
-          {/* Input Section */}
-          <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl p-8 md:p-12 shadow-2xl">
-            <div className="flex flex-col gap-8">
-              <div className="flex flex-col gap-4">
-                <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#F8FAFC]/30">Payload Identifier</label>
+        <div className="flex flex-col gap-8">
+          <div className="bg-white/5 border border-white/8 rounded-xl p-8">
+            <div className="flex flex-col gap-6">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm text-white/50">QR Code Link or Hash</label>
                 <div className="relative">
-                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[#F8FAFC]/20" />
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/20" />
                   <input
                     type="text"
                     value={dataPayload}
                     onChange={(e) => setDataPayload(e.target.value)}
-                    className="w-full pl-12 pr-6 py-5 bg-black/40 border border-white/10 rounded-xl text-sm text-[#F8FAFC] focus:outline-none focus:border-[#D4AF37]/50 transition-all placeholder:text-white/10"
-                    placeholder="https://... or hash-string-0x..."
+                    className="w-full pl-11 pr-4 py-3 bg-black/30 border border-white/8 rounded-lg text-sm text-white focus:outline-none focus:border-white/20 transition-colors placeholder:text-white/15"
+                    placeholder="https://... or 0x..."
                   />
                 </div>
               </div>
 
-              <div className="relative flex items-center justify-center">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-white/5"></div>
-                </div>
-                <span className="relative px-4 bg-[#081429] text-[10px] uppercase tracking-[0.3em] font-bold text-[#F8FAFC]/20">Alternatively</span>
+              <div className="relative flex items-center">
+                <div className="flex-1 border-t border-white/5"></div>
+                <span className="px-4 text-xs text-white/20">or</span>
+                <div className="flex-1 border-t border-white/5"></div>
               </div>
 
-              <div className="flex flex-col gap-4">
-                <label className="text-[10px] uppercase tracking-[0.3em] font-bold text-[#F8FAFC]/30">Document Ingestion</label>
-                <div className="group relative border-2 border-dashed border-white/5 rounded-2xl p-12 text-center hover:border-[#D4AF37]/30 transition-all cursor-pointer bg-white/[0.02]">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm text-white/50">Upload Document</label>
+                <div className="relative border border-dashed border-white/10 rounded-lg p-8 text-center hover:border-white/20 transition-colors cursor-pointer bg-white/3">
                    <input
                      type="file"
                      className="absolute inset-0 opacity-0 cursor-pointer"
                      onChange={(e) => setFile(e.target.files?.[0] || null)}
                    />
-                   <div className="flex flex-col items-center gap-4">
-                      <div className="w-12 h-12 rounded-full bg-white/5 flex items-center justify-center group-hover:scale-110 transition-transform">
-                        <Upload className="w-5 h-5 text-[#F8FAFC]/30 group-hover:text-[#D4AF37]" />
-                      </div>
-                      <div className="flex flex-col gap-1">
-                        <p className="text-sm font-medium">{file ? file.name : "Select sealed document"}</p>
-                        <p className="text-[10px] uppercase tracking-widest text-[#F8FAFC]/20">PDF, PNG, JPG (MAX 10MB)</p>
-                      </div>
+                   <div className="flex flex-col items-center gap-3">
+                      <Upload className="w-6 h-6 text-white/20" />
+                      <p className="text-sm text-white/50">{file ? file.name : "Click to select file"}</p>
+                      <p className="text-xs text-white/20">PDF, PNG, JPG up to 10MB</p>
                    </div>
                 </div>
               </div>
@@ -122,41 +104,31 @@ export default function VerifyPage() {
               <button
                 onClick={handleVerify}
                 disabled={loading}
-                className="group relative w-full py-5 mt-4 overflow-hidden rounded-xl border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] font-bold hover:text-[#020617] transition-colors duration-500"
+                className="w-full py-3 bg-white text-[#1a1410] text-sm font-medium rounded-lg hover:bg-white/90 disabled:opacity-50 transition-colors"
               >
-                <span className="relative z-10">{loading ? "Synchronizing Chain Data..." : "Execute Verification protocol"}</span>
-                <div className="absolute inset-0 bg-[#D4AF37] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+                {loading ? "Verifying..." : "Verify Document"}
               </button>
             </div>
           </div>
 
           {result && (
-             <div className={`w-full p-8 bg-white/5 backdrop-blur-2xl border rounded-2xl shadow-2xl flex items-start gap-6 transition-all duration-500 ${result.status === "authentic" ? "border-emerald-500/30" : "border-red-500/30"}`}>
+             <div className={`p-6 bg-white/5 border rounded-xl flex items-start gap-4 ${result.status === "authentic" ? "border-emerald-500/20" : "border-red-500/20"}`}>
                 {result.status === "authentic" ? (
-                   <ShieldCheck className="w-10 h-10 text-emerald-500" />
+                   <ShieldCheck className="w-8 h-8 text-emerald-500 flex-shrink-0" />
                 ) : (
-                   <ShieldAlert className="w-10 h-10 text-red-500" />
+                   <ShieldAlert className="w-8 h-8 text-red-500 flex-shrink-0" />
                 )}
-                <div className="flex flex-col gap-2">
-                   <h3 className={`text-xl font-serif tracking-tight ${result.status === "authentic" ? "text-emerald-400" : "text-red-400"}`}>
-                      Verification {result.status.toUpperCase()}
+                <div>
+                   <h3 className={`text-lg font-medium mb-1 ${result.status === "authentic" ? "text-emerald-400" : "text-red-400"}`}>
+                      {result.status === "authentic" ? "Document Verified" : "Verification Failed"}
                    </h3>
-                   <div className="text-[10px] font-bold tracking-[0.1em] text-[#F8FAFC]/30 flex flex-col gap-1">
-                      <span className="font-mono break-all text-[#F8FAFC]/60">BLOCKCHAIN HASH: {result.hash}</span>
-                      <span>TIMESTAMP: {result.timestamp}</span>
+                   <div className="text-sm text-white/30 space-y-1">
+                      <p className="font-mono text-xs text-white/50">Hash: {result.hash}</p>
+                      <p>Verified at: {result.timestamp}</p>
                    </div>
                 </div>
              </div>
           )}
-        </div>
-
-        <div className="mt-24 flex flex-wrap justify-center gap-10 text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/20">
-           {["Immutable Ledger", "Zero Knowledge Proof", "Time-Stamped Integrity"].map(label => (
-             <div key={label} className="flex items-center gap-3">
-                <div className="w-1 h-1 rounded-full bg-[#D4AF37]" />
-                <span>{label}</span>
-             </div>
-           ))}
         </div>
       </main>
     </div>

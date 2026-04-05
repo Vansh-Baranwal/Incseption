@@ -6,7 +6,6 @@ import { apiFetch } from "@/lib/api";
 import { Role, useAuthStore } from "@/store/useAuthStore";
 import toast from "react-hot-toast";
 import Link from "next/link";
-import { Loader2 } from "lucide-react";
 
 export default function LoginPage() {
   const [role, setRole] = useState<Role>("citizen");
@@ -30,7 +29,7 @@ export default function LoginPage() {
       });
 
       setAuth(response.token, response.user);
-      toast.success("Identity Verified");
+      toast.success("Signed in successfully");
 
       const matchedRole = response.user.role;
       router.push(`/dashboard/${matchedRole}`);
@@ -42,57 +41,51 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#020617] p-6 text-[#F8FAFC]">
-      {/* Cinematic Background elements */}
-      <div className="fixed inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[#D4AF37]/5 blur-[120px] rounded-full" />
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/5 blur-[120px] rounded-full" />
-      </div>
-
-      <div className="w-full max-w-md relative z-10">
-        <div className="text-center mb-12">
+    <div className="flex min-h-screen items-center justify-center bg-[#1a1410] p-6 text-[#e8e4df]">
+      <div className="w-full max-w-sm">
+        <div className="text-center mb-10">
           <Link href="/">
-             <h1 className="text-3xl font-serif text-[#D4AF37] font-bold tracking-[0.2em] uppercase cursor-pointer mb-2">Objection</h1>
+             <h1 className="text-2xl font-serif text-white cursor-pointer mb-1">Objection.ai</h1>
           </Link>
-          <div className="h-px w-12 bg-[#D4AF37]/30 mx-auto mb-4" />
-          <p className="text-[#F8FAFC]/40 text-[10px] uppercase tracking-[0.3em] font-bold">Secure Portal Authentication</p>
+          <p className="text-sm text-white/40">Sign in to your account</p>
         </div>
 
-        <div className="bg-white/5 backdrop-blur-2xl border border-white/10 rounded-2xl p-10 shadow-2xl">
-          <form onSubmit={handleLogin} className="flex flex-col gap-8">
-            <div className="flex bg-black/40 rounded-full p-1 border border-white/5 gap-1">
+        <div className="bg-white/5 border border-white/8 rounded-xl p-8">
+          <form onSubmit={handleLogin} className="flex flex-col gap-6">
+            {/* Role selector */}
+            <div className="flex bg-black/30 rounded-lg p-1 gap-1">
               {(["citizen", "lawyer", "admin"] as Role[]).map((r) => (
                  <button
                    key={r}
                    type="button"
                    onClick={() => setRole(r)}
-                   className={`flex-1 py-2 text-[10px] uppercase tracking-widest font-bold rounded-full transition-all duration-500 ${role === r ? "bg-[#D4AF37] text-[#020617]" : "text-[#F8FAFC]/40 hover:text-[#F8FAFC]"}`}
+                   className={`flex-1 py-2 text-sm capitalize rounded-md transition-all ${role === r ? "bg-white text-[#1a1410] font-medium" : "text-white/40 hover:text-white"}`}
                  >
                    {r}
                  </button>
               ))}
             </div>
 
-            <div className="flex flex-col gap-3">
-              <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Identity Identifier</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm text-white/50">Email</label>
               <input
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-[#F8FAFC] text-sm focus:outline-none focus:border-[#D4AF37]/50 transition-all placeholder:text-white/10"
-                placeholder="name@nexus.com"
+                className="w-full px-4 py-3 bg-black/30 border border-white/8 rounded-lg text-white text-sm focus:outline-none focus:border-white/20 transition-colors placeholder:text-white/15"
+                placeholder="you@example.com"
               />
             </div>
 
-            <div className="flex flex-col gap-3">
-              <label className="text-[10px] uppercase tracking-[0.2em] font-bold text-[#F8FAFC]/30 ml-1">Access Protocol</label>
+            <div className="flex flex-col gap-1.5">
+              <label className="text-sm text-white/50">Password</label>
               <input
                 type="password"
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full px-5 py-4 bg-white/5 border border-white/10 rounded-xl text-[#F8FAFC] text-sm focus:outline-none focus:border-[#D4AF37]/50 transition-all placeholder:text-white/10"
+                className="w-full px-4 py-3 bg-black/30 border border-white/8 rounded-lg text-white text-sm focus:outline-none focus:border-white/20 transition-colors placeholder:text-white/15"
                 placeholder="••••••••"
               />
             </div>
@@ -100,16 +93,18 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full py-4 mt-2 overflow-hidden rounded-xl border border-[#D4AF37]/50 text-[#D4AF37] text-[10px] uppercase tracking-[0.3em] font-bold hover:text-[#020617] transition-colors duration-500"
+              className="w-full py-3 bg-white text-[#1a1410] text-sm font-medium rounded-lg hover:bg-white/90 disabled:opacity-50 transition-colors"
             >
-              <span className="relative z-10">{loading ? "Validating..." : "Initialize Session"}</span>
-              <div className="absolute inset-0 bg-[#D4AF37] translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-out" />
+              {loading ? "Signing in..." : "Sign In"}
             </button>
           </form>
 
-          <div className="mt-10 pt-8 border-t border-white/5 text-center">
-            <p className="text-[10px] font-bold tracking-[0.1em] text-[#F8FAFC]/20">
-              New entity? <Link href="/signup" className="text-[#D4AF37] hover:text-[#F1D279] transition-colors ml-1 uppercase">Register Identity</Link>
+          <div className="mt-8 pt-6 border-t border-white/5 text-center">
+            <p className="text-sm text-white/30">
+              Don&apos;t have an account?{" "}
+              <Link href="/signup" className="text-white/70 hover:text-white transition-colors">
+                Sign up
+              </Link>
             </p>
           </div>
         </div>

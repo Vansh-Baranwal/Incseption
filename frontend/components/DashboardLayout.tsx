@@ -23,16 +23,16 @@ export default function DashboardLayout({
   }, [token, router]);
 
   if (!mounted || !token) {
-    return <div className="min-h-screen bg-[#020617]" />; // Safe hydration wrapper
+    return <div className="min-h-screen bg-[#1a1410]" />;
   }
 
   return (
-    <div className="flex h-screen w-full bg-[#020617] text-[#F8FAFC] overflow-hidden">
+    <div className="flex h-screen w-full bg-[#1a1410] text-[#e8e4df] overflow-hidden">
       <Sidebar />
       <div className="flex flex-col flex-1 min-w-0">
         <Navbar />
-        <main className="flex-1 overflow-y-auto p-4 md:p-8">
-          <div className="mx-auto max-w-6xl w-full">
+        <main className="flex-1 overflow-y-auto p-6 md:p-8">
+          <div className="mx-auto max-w-5xl w-full">
              {children}
           </div>
         </main>

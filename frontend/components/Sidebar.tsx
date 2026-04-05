@@ -31,22 +31,22 @@ export default function Sidebar() {
   };
 
   const citizenLinks = [
-    { name: "VAULT", href: "/dashboard/citizen", icon: ShieldAlert },
-    { name: "NYAYA SETU", href: "/dashboard/citizen/chat", icon: MessageSquare },
-    { name: "DOCUMENTS", href: "/dashboard/citizen/vault", icon: FileText },
+    { name: "Whistleblower Vault", href: "/dashboard/citizen", icon: ShieldAlert },
+    { name: "Nyaya Setu", href: "/dashboard/citizen/chat", icon: MessageSquare },
+    { name: "Documents", href: "/dashboard/citizen/vault", icon: FileText },
   ];
 
   const lawyerLinks = [
-    { name: "INGESTION", href: "/dashboard/lawyer", icon: UploadCloud },
-    { name: "VERIFIER", href: "/dashboard/lawyer/qr", icon: QrCode },
-    { name: "CUSTODY", href: "/dashboard/lawyer/timeline", icon: Activity },
-    { name: "DEADMAN", href: "/dashboard/lawyer/deadman", icon: FileText },
-    { name: "CAPSULE", href: "/dashboard/lawyer/timecapsule", icon: Archive },
+    { name: "Upload", href: "/dashboard/lawyer", icon: UploadCloud },
+    { name: "QR Verifier", href: "/dashboard/lawyer/qr", icon: QrCode },
+    { name: "Chain of Custody", href: "/dashboard/lawyer/timeline", icon: Activity },
+    { name: "Dead Man's Switch", href: "/dashboard/lawyer/deadman", icon: FileText },
+    { name: "Time Capsule", href: "/dashboard/lawyer/timecapsule", icon: Archive },
   ];
 
   const adminLinks = [
-    { name: "ANALYTICS", href: "/dashboard/admin", icon: BarChart },
-    { name: "PROTOCOL LOGS", href: "/dashboard/admin/activity", icon: List },
+    { name: "Overview", href: "/dashboard/admin", icon: BarChart },
+    { name: "Activity Logs", href: "/dashboard/admin/activity", icon: List },
   ];
 
   let links: any[] = [];
@@ -55,16 +55,14 @@ export default function Sidebar() {
   if (role === "admin") links = adminLinks;
 
   return (
-    <aside className="flex flex-col h-full w-72 bg-[#020617] border-r border-white/5 relative z-20">
-      <div className="px-10 py-10 mb-4">
+    <aside className="flex flex-col h-full w-60 bg-[#15110d] border-r border-white/5">
+      <div className="px-6 py-6 border-b border-white/5">
         <Link href="/">
-           <h1 className="text-xl font-serif font-bold tracking-[0.2em] uppercase text-[#D4AF37] cursor-pointer">Objection</h1>
+           <h1 className="text-lg font-serif text-white cursor-pointer">Objection.ai</h1>
         </Link>
-        <p className="text-[10px] tracking-[0.3em] font-bold text-[#F8FAFC]/20 mt-2">LEGAL PROTOCOL V.1.0</p>
       </div>
 
-      <nav className="flex flex-col flex-1 gap-1 px-6 overflow-y-auto">
-        <div className="text-[10px] font-bold tracking-[0.3em] text-[#F8FAFC]/20 uppercase mb-4 ml-4">Command Center</div>
+      <nav className="flex flex-col flex-1 gap-0.5 p-3 overflow-y-auto">
         {links.map((link) => {
           const Icon = link.icon;
           const isActive = pathname === link.href;
@@ -73,36 +71,36 @@ export default function Sidebar() {
             <Link
               key={link.name}
               href={link.href}
-              className={`group flex items-center gap-4 px-5 py-3.5 rounded-xl transition-all duration-300 relative
-                ${isActive ? "bg-white/5 text-[#D4AF37] shadow-xl" : "text-[#F8FAFC]/40 hover:text-[#F8FAFC] hover:bg-white/[0.02]"}`}
+              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${
+                isActive 
+                  ? "bg-white/8 text-white" 
+                  : "text-white/40 hover:text-white hover:bg-white/3"
+              }`}
             >
-              <Icon className={`w-4 h-4 transition-colors ${isActive ? "text-[#D4AF37]" : "text-[#F8FAFC]/20 group-hover:text-[#D4AF37]/50"}`} />
-              <span className="text-[10px] font-bold tracking-[0.3em] uppercase">{link.name}</span>
-              {isActive && (
-                <div className="absolute left-0 top-1/4 bottom-1/4 w-0.5 bg-[#D4AF37] rounded-full shadow-[0_0_10px_#D4AF37]" />
-              )}
+              <Icon className="w-4 h-4" />
+              {link.name}
             </Link>
           );
         })}
       </nav>
 
-      <div className="p-6 border-t border-white/5 bg-black/20">
-        <div className="flex items-center gap-4 px-4 py-4 mb-4 rounded-xl bg-white/5 border border-white/5">
-           <div className="w-8 h-8 rounded-full bg-[#D4AF37]/20 flex items-center justify-center text-[#D4AF37] font-serif text-xs border border-[#D4AF37]/20">
+      <div className="p-4 border-t border-white/5">
+        <div className="flex items-center gap-3 px-3 py-3 mb-3 rounded-lg bg-white/5">
+           <div className="w-7 h-7 rounded-full bg-amber-800/30 flex items-center justify-center text-amber-200 text-xs font-medium">
              {userName?.charAt(0) || "U"}
            </div>
            <div className="flex flex-col truncate">
-             <span className="text-[10px] font-bold tracking-widest uppercase text-[#F8FAFC]/80">{userName || "User Entity"}</span>
-             <span className="text-[8px] tracking-[0.2em] uppercase text-[#F8FAFC]/30">{role || "Protocol Access"}</span>
+             <span className="text-sm text-white/80 truncate">{userName || "User"}</span>
+             <span className="text-xs text-white/30 capitalize">{role}</span>
            </div>
         </div>
 
         <button
           onClick={handleLogout}
-          className="group flex items-center w-full gap-4 px-5 py-3.5 text-[10px] font-bold tracking-[0.3em] uppercase text-[#F8FAFC]/30 hover:text-[#EF4444] transition-all rounded-xl hover:bg-red-500/5"
+          className="flex items-center w-full gap-3 px-3 py-2.5 text-sm text-white/30 hover:text-red-400 transition-colors rounded-lg hover:bg-white/3"
         >
-          <LogOut className="w-4 h-4 transition-colors" />
-          Terminate Session
+          <LogOut className="w-4 h-4" />
+          Sign Out
         </button>
       </div>
     </aside>

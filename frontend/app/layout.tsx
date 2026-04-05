@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
-import { Outfit, Libre_Baskerville } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
 
-const sans = Outfit({ subsets: ["latin"], weight: ["300", "400", "500", "600"], variable: "--font-outfit" });
-const serif = Libre_Baskerville({ subsets: ["latin"], weight: ["400", "700"], variable: "--font-libre" });
+const inter = Inter({ subsets: ["latin"], weight: ["300", "400", "500", "600", "700"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Objection.ai - Justice, Delivered",
-  description: "Premium Legal-Tech Document Security",
+  title: "Objection.ai — Legal Document Security",
+  description: "Blockchain-powered legal document verification and security platform",
 };
 
 export default function RootLayout({
@@ -17,10 +16,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${sans.variable} ${serif.variable}`}>
-       <body className="bg-[#020617] m-0 p-0 overflow-x-hidden font-sans antialiased text-[#F8FAFC]">
+    <html lang="en" className={inter.variable}>
+       <body className="bg-[#1a1410] m-0 p-0 overflow-x-hidden font-sans antialiased text-[#e8e4df]">
         {children}
-        <Toaster position="top-right" toastOptions={{ style: { background: "#1E293B", color: "#F8FAFC", border: "1px solid #334155" } }} />
+        <Toaster position="top-right" toastOptions={{ style: { background: "#2a2420", color: "#e8e4df", border: "1px solid rgba(255,255,255,0.08)", fontSize: "14px" } }} />
       </body>
     </html>
   );
