@@ -32,8 +32,8 @@ const config: Config = {
         },
       },
       fontFamily: {
-        sans: ['var(--font-outfit)', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-outfit)', 'system-ui', 'sans-serif'],
+        sans: ['Satoshi', 'system-ui', 'sans-serif'],
+        serif: ['Satoshi', 'system-ui', 'sans-serif'],
       },
       transitionProperty: {
         'colors': 'background-color, border-color, color, fill, stroke, text-decoration-color, opacity, box-shadow, transform, filter, backdrop-filter',
