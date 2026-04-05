@@ -60,7 +60,7 @@ export default function VerifyPage() {
           <Link href="/" className="p-2 -ml-2 rounded-full hover:bg-muted transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <span className="text-xl font-serif text-foreground font-medium">Verifier</span>
+          <span className="text-xl font-sans text-foreground font-medium">Verifier</span>
         </div>
         <div className="flex items-center gap-6 text-sm">
           <Link href="/login" className="text-muted-foreground hover:text-foreground transition-colors hidden md:block">
@@ -85,7 +85,7 @@ export default function VerifyPage() {
           <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-2">
             <ShieldCheck className="w-8 h-8 text-primary" />
           </div>
-          <h1 className="text-4xl md:text-5xl font-serif text-foreground leading-tight">
+          <h1 className="text-4xl md:text-5xl font-sans text-foreground leading-tight">
             Seal Verification
           </h1>
           <p className="text-muted-foreground max-w-lg leading-relaxed italic">
@@ -99,7 +99,12 @@ export default function VerifyPage() {
            initial="hidden"
            animate="show"
         >
-          <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl p-8 md:p-10 shadow-sm">
+          <motion.div 
+            variants={itemVariants} 
+            animate={{ y: [-5, 5, -5] }}
+            transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            className="bg-card border border-border flex flex-col gap-8 rounded-2xl p-8 md:p-10 shadow-lg hover:shadow-xl hover:border-primary/30 transition-all duration-500"
+          >
             <div className="flex flex-col gap-8">
               <div className="flex flex-col gap-2.5">
                 <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Cryptographic Hash or URL</label>
@@ -123,7 +128,7 @@ export default function VerifyPage() {
 
               <div className="flex flex-col gap-2.5">
                 <label className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest ml-1">Evidence Payload</label>
-                <div className="relative border-2 border-dashed border-border rounded-xl p-10 text-center hover:bg-muted/30 transition-all cursor-pointer group">
+                <div className="relative border-2 border-dashed border-border rounded-xl p-10 text-center hover:bg-muted/30 transition-all cursor-pointer group hover:border-primary/50">
                    <input
                      type="file"
                      className="absolute inset-0 opacity-0 cursor-pointer z-10"
@@ -144,7 +149,7 @@ export default function VerifyPage() {
               <motion.button
                 onClick={handleVerify}
                 disabled={loading}
-                whileHover={{ scale: 1.02 }}
+                whileHover={{ scale: 1.02, boxShadow: "0 0 20px rgba(var(--primary-rgb),0.3)" }}
                 whileTap={{ scale: 0.98 }}
                 className="w-full py-4 bg-primary text-primary-foreground text-sm font-bold rounded-xl hover:opacity-90 disabled:opacity-50 transition-all shadow-lg shadow-primary/10"
               >
@@ -168,7 +173,7 @@ export default function VerifyPage() {
                   )}
                 </div>
                 <div className="flex-1 flex flex-col items-center md:items-start gap-2 text-center md:text-left">
-                   <h3 className={`text-2xl font-serif leading-none ${result.status === "authentic" ? "text-emerald-600 dark:text-emerald-400" : "text-red-400"}`}>
+                   <h3 className={`text-2xl font-sans font-bold leading-none ${result.status === "authentic" ? "text-emerald-600 dark:text-emerald-400" : "text-red-400"}`}>
                       {result.status === "authentic" ? "Document Authentic" : "Verification Failed"}
                    </h3>
                    <p className="text-sm text-muted-foreground italic max-w-sm">
@@ -194,7 +199,7 @@ export default function VerifyPage() {
         <p className="text-xs text-muted-foreground/40 max-w-md">
           Objection.ai uses quantum-safe hashing algorithms. Your documents are analyzed locally; private data never leaves your browser during verification.
         </p>
-        <Link href="/" className="text-sm font-serif text-foreground/40 hover:text-primary transition-colors">
+        <Link href="/" className="text-sm font-sans font-bold text-foreground/40 hover:text-primary transition-colors">
           Objection.ai
         </Link>
       </footer>

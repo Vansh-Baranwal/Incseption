@@ -51,7 +51,7 @@ export default function LoginPage() {
       >
         <div className="text-center mb-10">
           <Link href="/">
-             <h1 className="text-2xl font-serif text-foreground cursor-pointer mb-1">Objection.ai</h1>
+             <h1 className="text-2xl font-sans font-bold text-foreground cursor-pointer mb-1">Objection.ai</h1>
           </Link>
           <p className="text-sm text-muted-foreground">Sign in to your account</p>
         </div>
@@ -59,8 +59,16 @@ export default function LoginPage() {
         <motion.div 
            className="bg-card border border-border rounded-xl p-8 shadow-sm relative overflow-hidden"
            initial={{ opacity: 0, scale: 0.95 }}
-           animate={{ opacity: 1, scale: 1 }}
-           transition={{ duration: 0.4, delay: 0.1, ease: "easeOut" }}
+           animate={{ 
+             opacity: 1, 
+             scale: 1,
+             y: [0, -6, 0]
+           }}
+           transition={{ 
+             opacity: { duration: 0.4, delay: 0.1 },
+             scale: { duration: 0.4, delay: 0.1 },
+             y: { duration: 5, repeat: Infinity, ease: "easeInOut" }
+           }}
         >
           <form onSubmit={handleLogin} className="flex flex-col gap-6 relative z-10">
             {/* Role selector */}

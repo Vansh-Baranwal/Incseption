@@ -51,7 +51,7 @@ export default function CitizenDashboard() {
     >
       <motion.div variants={itemVariants} className="flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-serif text-foreground mb-2">Citizen Dashboard</h2>
+          <h2 className="text-3xl font-sans font-bold text-foreground mb-2">Citizen Dashboard</h2>
           <p className="text-sm text-muted-foreground max-w-md italic">
             Manage your cryptographic identities and communicate securely through the Nyaya Setu pipeline.
           </p>
@@ -74,7 +74,12 @@ export default function CitizenDashboard() {
             </motion.div>
 
             {/* Document list */}
-            <motion.div variants={itemVariants} className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm transition-all duration-300">
+            <motion.div 
+              variants={itemVariants} 
+              animate={{ y: [-4, 4, -4] }}
+              transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+              className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm hover:shadow-lg hover:border-primary/20 transition-all duration-500"
+            >
                <div className="px-6 py-5 border-b border-border bg-muted/20 flex flex-col md:flex-row md:items-center justify-between gap-3">
                   <div className="flex items-center gap-2">
                     <h3 className="text-sm font-semibold text-foreground tracking-tight">Your Digital Vault</h3>
@@ -90,7 +95,7 @@ export default function CitizenDashboard() {
                   </div>
                </div>
                
-               <div className="p-4 max-h-[450px] overflow-y-auto">
+               <div className="p-4 max-h-[450px] overflow-y-auto custom-scrollbar">
                  {loading ? (
                    <div className="flex flex-col justify-center items-center py-20 gap-3">
                      <div className="w-6 h-6 border-2 border-primary/30 border-t-primary rounded-full animate-spin" />
@@ -107,7 +112,7 @@ export default function CitizenDashboard() {
                        <motion.div 
                           key={idx} 
                           variants={itemVariants}
-                          whileHover={{ scale: 1.01, transition: { duration: 0.2 } }}
+                          whileHover={{ x: 6, transition: { duration: 0.2 } }}
                           className="group flex items-center justify-between p-3.5 bg-background border border-border rounded-xl hover:border-primary/30 hover:bg-muted/30 transition-all cursor-pointer"
                        >
                           <div className="flex items-center gap-4">
@@ -115,15 +120,15 @@ export default function CitizenDashboard() {
                                <FileText className="w-5 h-5 text-muted-foreground group-hover:text-primary transition-colors" />
                              </div>
                              <div>
-                                <div className="text-sm font-medium text-foreground/90 leading-none mb-1">{doc.name}</div>
+                                <div className="text-sm font-medium text-foreground/90 leading-none mb-1 group-hover:text-primary transition-colors">{doc.name}</div>
                                 <div className="text-[10px] text-muted-foreground uppercase tracking-wider font-bold">{doc.date}</div>
                              </div>
                           </div>
                           <div className="flex items-center gap-3">
                             <span className={`text-[10px] font-bold px-2.5 py-1 rounded-full uppercase tracking-wider ${
                               doc.status === "Verified" 
-                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400" 
-                                : "bg-amber-500/10 text-amber-600 dark:text-amber-400"
+                                ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20" 
+                                : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/20"
                             }`}>
                                {doc.status}
                             </span>
@@ -148,17 +153,27 @@ export default function CitizenDashboard() {
          </div>
 
          {/* Chat */}
-         <motion.div variants={itemVariants} className="lg:col-span-12 xl:col-span-5 flex flex-col gap-6">
+         <motion.div 
+           variants={itemVariants} 
+           animate={{ y: [4, -4, 4] }}
+           transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
+           className="lg:col-span-12 xl:col-span-5 flex flex-col gap-6"
+         >
             <div className="flex items-center justify-between">
                <div className="flex items-center gap-2">
-                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                 <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                  <h3 className="text-sm font-semibold text-foreground tracking-tight uppercase tracking-wider">Nyaya Setu AI</h3>
                </div>
-               <span className="text-[10px] text-muted-foreground font-medium bg-muted px-2 py-1 rounded uppercase">Legal Expert Mode</span>
+               <span className="text-[10px] text-muted-foreground font-medium bg-muted px-2 py-1 rounded uppercase border border-border/50">Legal Expert Mode</span>
             </div>
-            <ChatUI />
+            <div className="bg-card border border-border shadow-sm rounded-2xl overflow-hidden hover:shadow-lg hover:border-primary/20 transition-all duration-500">
+              <ChatUI />
+            </div>
             
-            <div className="p-5 bg-primary/5 border border-primary/10 rounded-2xl flex items-start gap-4">
+            <motion.div 
+              whileHover={{ scale: 1.02 }}
+              className="p-5 bg-primary/5 border border-primary/10 rounded-2xl flex items-start gap-4 shadow-sm"
+            >
                <ShieldCheck className="w-5 h-5 text-primary mt-0.5 shrink-0" />
                <div className="flex flex-col gap-1">
                   <p className="text-xs font-semibold text-primary/80">Quantum-Safe Communication</p>
@@ -166,7 +181,7 @@ export default function CitizenDashboard() {
                     All messages in this session are end-to-end encrypted and automatically purged after 24 hours of inactivity.
                   </p>
                </div>
-            </div>
+            </motion.div>
          </motion.div>
       </div>
     </motion.div>

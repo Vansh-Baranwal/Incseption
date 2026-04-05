@@ -59,7 +59,7 @@ export default function PoliciesPage() {
           <Link href="/" className="p-2 -ml-2 rounded-full hover:bg-muted transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <span className="text-xl font-serif text-foreground font-medium">Policy Center</span>
+          <span className="text-xl font-sans font-bold text-foreground font-medium">Policy Center</span>
         </div>
         <div className="flex items-center gap-6">
           <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden md:block">
@@ -79,7 +79,7 @@ export default function PoliciesPage() {
            transition={{ duration: 0.6 }}
         >
           <div className="max-w-xl">
-            <h1 className="text-4xl md:text-5xl font-serif text-foreground mb-4 leading-tight">Governance & Protocols</h1>
+            <h1 className="text-4xl md:text-5xl font-sans font-bold text-foreground mb-4 leading-tight">Governance & Protocols</h1>
             <p className="text-muted-foreground leading-relaxed italic">
               Our cryptographic foundation is built on absolute transparency. Explore the frameworks that govern document security and legal integrity.
             </p>
@@ -102,37 +102,58 @@ export default function PoliciesPage() {
            </div>
         ) : (
            <motion.div 
-             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10"
              variants={containerVariants}
              initial="hidden"
              animate="show"
            >
-              {filtered.length > 0 ? filtered.map((policy) => (
-                <motion.div key={policy.id} variants={itemVariants} whileHover={{ y: -5, transition: { duration: 0.2 } }} className="bg-card border border-border p-8 rounded-2xl hover:border-primary/30 hover:bg-muted/30 transition-all flex flex-col gap-5 group shadow-sm">
-                   <div className="flex items-start justify-between">
-                      <div className="w-10 h-10 rounded-xl bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-                        {policy.category === 'Security' ? <Shield className="w-5 h-5 text-primary" /> : <FileText className="w-5 h-5 text-primary" />}
+              {filtered.length > 0 ? filtered.map((policy, i) => (
+                <motion.div 
+                  key={policy.id} 
+                  variants={itemVariants} 
+                  animate={{ y: [0, -8, 0] }}
+                  transition={{ 
+                    duration: 5, 
+                    repeat: Infinity, 
+                    ease: "easeInOut",
+                    delay: i * 0.2 // offset the floating animation
+                  }}
+                  whileHover={{ scale: 1.02, boxShadow: "0 20px 40px rgba(0,0,0,0.05)" }} 
+                  className="bg-card border border-border p-8 rounded-3xl hover:border-primary/40 hover:bg-muted/30 transition-all flex flex-col gap-6 group shadow-sm cursor-default relative overflow-hidden"
+                >
+                   <div className="flex items-start justify-between relative z-10">
+                      <div className="w-12 h-12 rounded-2xl bg-muted p-3 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all shadow-inner">
+                        {policy.category === 'Security' ? <Shield className="w-6 h-6 text-primary" /> : <FileText className="w-6 h-6 text-primary" />}
                       </div>
-                      <span className="text-[10px] font-bold text-muted-foreground/40 uppercase tracking-widest">{policy.id.padStart(3, '0')}</span>
+                      <span className="text-[10px] font-bold text-muted-foreground/30 uppercase tracking-widest tabular-nums">{policy.id.padStart(3, '0')}</span>
                    </div>
-                   <div className="flex flex-col gap-2">
-                     <span className={`text-[10px] font-bold uppercase tracking-widest w-fit px-2 py-0.5 rounded ${
-                        policy.category === 'Security' ? 'bg-red-500/10 text-red-500' : 
-                        policy.category === 'Privacy' ? 'bg-blue-500/10 text-blue-500' : 'bg-emerald-500/10 text-emerald-500'
+                   <div className="flex flex-col gap-3 relative z-10">
+                     <span className={`text-[10px] font-bold uppercase tracking-widest w-fit px-2.5 py-1 rounded-full border shadow-sm ${
+                        policy.category === 'Security' ? 'bg-red-500/10 text-red-500 border-red-500/20 shadow-red-500/5' : 
+                        policy.category === 'Privacy' ? 'bg-blue-500/10 text-blue-500 border-blue-500/20 shadow-blue-500/5' : 
+                        'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border-emerald-500/20 shadow-emerald-500/5'
                      }`}>
                         {policy.category}
                      </span>
-                     <h3 className="text-xl font-serif text-foreground group-hover:text-primary transition-colors">{policy.title}</h3>
+                     <h3 className="text-2xl font-sans font-bold text-foreground group-hover:text-primary transition-colors leading-tight">{policy.title}</h3>
                    </div>
-                   <p className="text-sm text-muted-foreground flex-1 leading-relaxed">{policy.description}</p>
-                   <Link href={policy.link} className="inline-flex items-center gap-2 text-sm font-bold text-primary hover:gap-3 transition-all">
+                   <p className="text-sm text-muted-foreground flex-1 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity italic">{policy.description}</p>
+                   <Link href={policy.link} className="inline-flex items-center gap-2 text-sm font-bold text-primary group-hover:translate-x-1 transition-all relative z-10">
                       Read full protocol <MoveRight className="w-4 h-4" />
                    </Link>
+                   
+                   {/* Decorative background gradient */}
+                   <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
                 </motion.div>
               )) : (
-                <motion.div variants={itemVariants} className="col-span-full py-24 text-center border-2 border-dashed border-border rounded-3xl flex flex-col items-center gap-4 text-muted-foreground/30">
-                   <Search className="w-10 h-10" />
-                   <p className="text-sm font-medium italic">No protocols match your criteria.</p>
+                <motion.div variants={itemVariants} className="col-span-full py-32 text-center border-2 border-dashed border-border rounded-3xl flex flex-col items-center gap-6 text-muted-foreground/30 bg-muted/5 relative z-10">
+                   <div className="p-6 bg-muted rounded-full">
+                      <Search className="w-10 h-10" />
+                   </div>
+                   <div className="flex flex-col gap-2">
+                      <p className="text-lg font-medium">No protocols match your criteria.</p>
+                      <p className="text-sm">Try broader keywords or browse categories.</p>
+                   </div>
                 </motion.div>
               )}
            </motion.div>
@@ -146,7 +167,7 @@ export default function PoliciesPage() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
         >
-           <h2 className="text-2xl font-serif text-foreground/80 italic">&ldquo;Trust is a function of transparency.&rdquo;</h2>
+           <h2 className="text-2xl font-sans font-bold text-foreground/80 italic">&ldquo;Trust is a function of transparency.&rdquo;</h2>
            <div className="flex gap-8 text-xs font-bold text-muted-foreground uppercase tracking-widest">
               <Link href="#" className="hover:text-primary transition-colors">GDPR Compliance</Link>
               <Link href="#" className="hover:text-primary transition-colors">E-Evidence Regulation</Link>

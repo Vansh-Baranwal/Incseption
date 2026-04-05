@@ -53,7 +53,7 @@ export default function HomeFooter() {
           viewport={{ once: true, margin: "-100px" }}
           transition={{ duration: 0.6 }}
         >
-          <h2 className="text-3xl md:text-5xl font-serif mb-4">
+          <h2 className="text-3xl md:text-5xl font-sans mb-4">
             Why Objection.ai
           </h2>
           <p className="text-muted-foreground text-lg max-w-xl">

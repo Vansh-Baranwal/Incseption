@@ -175,25 +175,25 @@ export default function HeroCanvasAnimation() {
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           <motion.div style={{ opacity: op1 }} className="absolute text-center px-6 w-full max-w-4xl">
             <h1 
-              className="text-4xl md:text-7xl font-serif text-foreground leading-[1.1]" 
+              className="text-4xl md:text-8xl font-sans font-black text-foreground tracking-[-0.08em] leading-[0.9]" 
               style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
             >
-              Justice, Redefined.
+              Experience Liftoff.
             </h1>
           </motion.div>
 
           <motion.div style={{ opacity: op2 }} className="absolute text-center px-6 w-full max-w-4xl">
             <h2 
-              className="text-3xl md:text-6xl font-serif text-foreground leading-[1.15]"
+              className="text-3xl md:text-7xl font-sans font-bold text-foreground tracking-[-0.07em] leading-[1]"
               style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
             >
-              Every Document<br />Is Truth.
+              The Next-Generation<br />Justice Protocol.
             </h2>
           </motion.div>
 
           <motion.div style={{ opacity: op3 }} className="absolute text-center px-6 w-full max-w-4xl">
             <h2 
-              className="text-3xl md:text-6xl font-serif text-foreground leading-[1.15]"
+              className="text-3xl md:text-6xl font-sans text-foreground leading-[1.15]"
               style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
             >
               Immutable. Verifiable.<br />Absolute.
@@ -202,7 +202,7 @@ export default function HeroCanvasAnimation() {
 
           <motion.div style={{ opacity: op4 }} className="absolute text-center pointer-events-auto px-6 w-full max-w-4xl flex flex-col items-center gap-8">
             <h2 
-              className="text-4xl md:text-7xl font-serif text-foreground"
+              className="text-4xl md:text-7xl font-sans text-foreground"
               style={{ textShadow: "0 0 40px var(--background), 0 0 20px var(--background)" }}
             >
               Enter The Vault

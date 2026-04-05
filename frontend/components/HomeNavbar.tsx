@@ -29,7 +29,7 @@ export default function HomeNavbar() {
         <motion.span 
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="text-lg font-serif text-foreground cursor-pointer block"
+          className="text-lg font-sans font-bold text-foreground cursor-pointer block"
         >
           Objection.ai
         </motion.span>
