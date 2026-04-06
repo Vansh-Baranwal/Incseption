@@ -1,12 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import {
   motion,
   useScroll,
   useTransform,
   useSpring,
-  useVelocity,
   useMotionValueEvent,
 } from "framer-motion";
 import Link from "next/link";
@@ -24,21 +23,23 @@ export default function HeroCanvasAnimation() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
+  const lastFrameRef = useRef<number>(-1);
+  const rafRef = useRef<number | null>(null);
+  const pendingFrameRef = useRef<number | null>(null);
 
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
   });
 
+  // Smoother spring with less stiffness for better performance
   const springProgress = useSpring(scrollYProgress, {
-    stiffness: 200,
-    damping: 40,
+    stiffness: 100,
+    damping: 30,
     restDelta: 0.001
   });
 
   const frameIndex = useTransform(springProgress, [0, 1], [0, TOTAL_FRAMES - 1]);
-  const scrollVelocity = useVelocity(scrollYProgress);
-  const yOffset = useTransform(scrollVelocity, [-1, 0, 1], [8, 0, -8], { clamp: true });
 
   useEffect(() => {
     setMounted(true);
@@ -46,9 +47,9 @@ export default function HeroCanvasAnimation() {
 
   useEffect(() => {
     let loadedCount = 0;
-    const preloadedImages: HTMLImageElement[] = [];
+    const preloadedImages: HTMLImageElement[] = new Array(TOTAL_FRAMES);
 
-    const onLoad = () => {
+    const onLoad = (index: number) => () => {
       loadedCount++;
       setLoadProgress(Math.round((loadedCount / TOTAL_FRAMES) * 100));
       if (loadedCount === TOTAL_FRAMES) {
@@ -57,42 +58,47 @@ export default function HeroCanvasAnimation() {
       }
     };
 
+    // Preload images in order
     for (let i = 0; i < TOTAL_FRAMES; i++) {
-        const img = new window.Image();
-        img.src = `${FRAME_PATH}-${i}.png`;
-        img.onload = onLoad;
-        preloadedImages.push(img);
+      const img = new window.Image();
+      img.decoding = "async";
+      img.src = `${FRAME_PATH}-${i}.png`;
+      img.onload = onLoad(i);
+      preloadedImages[i] = img;
     }
   }, []);
 
-  const renderFrame = (index: number) => {
+  const renderFrame = useCallback((index: number) => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext("2d");
+    
+    const currentFrameIndex = Math.max(0, Math.min(Math.round(index), TOTAL_FRAMES - 1));
+    
+    // Skip if same frame
+    if (currentFrameIndex === lastFrameRef.current) return;
+    lastFrameRef.current = currentFrameIndex;
+
+    const ctx = canvas.getContext("2d", { alpha: false });
     if (!ctx) return;
 
-    const currentFrameIndex = Math.max(0, Math.min(Math.round(index), TOTAL_FRAMES - 1));
     const currentImg = imagesRef.current[currentFrameIndex];
-    if (!currentImg) return;
+    if (!currentImg || !currentImg.complete) return;
 
-    const dpr = window.devicePixelRatio || 1;
-    const scaleFactor = window.innerWidth < 768 ? 0.8 : 1;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2x for performance
+    const logicalWidth = window.innerWidth;
+    const logicalHeight = window.innerHeight;
     
-    const targetWidth = window.innerWidth * dpr * scaleFactor;
-    const targetHeight = window.innerHeight * dpr * scaleFactor;
+    const targetWidth = Math.floor(logicalWidth * dpr);
+    const targetHeight = Math.floor(logicalHeight * dpr);
 
     if (canvas.width !== targetWidth || canvas.height !== targetHeight) {
       canvas.width = targetWidth;
       canvas.height = targetHeight;
-      ctx.scale(dpr * scaleFactor, dpr * scaleFactor);
     }
 
-    // Fill with theme background
+    // Use theme background
     ctx.fillStyle = theme === "dark" ? "#1a1410" : "#fcfbf9";
-    ctx.fillRect(0, 0, window.innerWidth, window.innerHeight);
-
-    const logicalWidth = window.innerWidth;
-    const logicalHeight = window.innerHeight;
+    ctx.fillRect(0, 0, targetWidth, targetHeight);
 
     const imgAspectRatio = currentImg.width / currentImg.height;
     const canvasAspectRatio = logicalWidth / logicalHeight;
@@ -100,23 +106,37 @@ export default function HeroCanvasAnimation() {
     let drawWidth, drawHeight, offsetX, offsetY;
 
     if (imgAspectRatio > canvasAspectRatio) {
-      drawHeight = logicalHeight;
-      drawWidth = logicalHeight * imgAspectRatio;
-      offsetX = (logicalWidth - drawWidth) / 2;
+      drawHeight = targetHeight;
+      drawWidth = Math.floor(targetHeight * imgAspectRatio);
+      offsetX = Math.floor((targetWidth - drawWidth) / 2);
       offsetY = 0;
     } else {
-      drawWidth = logicalWidth;
-      drawHeight = logicalWidth / imgAspectRatio;
+      drawWidth = targetWidth;
+      drawHeight = Math.floor(targetWidth / imgAspectRatio);
       offsetX = 0;
-      offsetY = (logicalHeight - drawHeight) / 2;
+      offsetY = Math.floor((targetHeight - drawHeight) / 2);
     }
 
     ctx.drawImage(currentImg, offsetX, offsetY, drawWidth, drawHeight);
-  };
+  }, [theme]);
+
+  // Throttled render using RAF
+  const scheduleRender = useCallback((index: number) => {
+    pendingFrameRef.current = index;
+    
+    if (rafRef.current === null) {
+      rafRef.current = requestAnimationFrame(() => {
+        if (pendingFrameRef.current !== null) {
+          renderFrame(pendingFrameRef.current);
+        }
+        rafRef.current = null;
+      });
+    }
+  }, [renderFrame]);
 
   useMotionValueEvent(frameIndex, "change", (latest) => {
     if (isLoaded) {
-      renderFrame(latest);
+      scheduleRender(latest);
     }
   });
 
@@ -124,18 +144,23 @@ export default function HeroCanvasAnimation() {
     if (!isLoaded) return;
     renderFrame(frameIndex.get());
 
-    const handleResize = () => renderFrame(frameIndex.get());
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoaded, theme]);
+    const handleResize = () => {
+      lastFrameRef.current = -1; // Force re-render
+      renderFrame(frameIndex.get());
+    };
+    
+    window.addEventListener("resize", handleResize, { passive: true });
+    return () => {
+      window.removeEventListener("resize", handleResize);
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+    };
+  }, [isLoaded, theme, frameIndex, renderFrame]);
 
   const op1 = useTransform(scrollYProgress, [0, 0.1, 0.2, 0.25], [0, 1, 1, 0]);
   const op2 = useTransform(scrollYProgress, [0.25, 0.35, 0.45, 0.55], [0, 1, 1, 0]);
   const op3 = useTransform(scrollYProgress, [0.55, 0.65, 0.75, 0.85], [0, 1, 1, 0]);
   const op4 = useTransform(scrollYProgress, [0.85, 0.92, 0.98, 1], [0, 1, 1, 0]);
 
-  // Use 'dark' as default to match the defaultTheme in layout.tsx
   const vignetteColor = theme === "light" ? "rgba(252,251,249,0.95)" : "rgba(26,20,16,0.95)";
   const vignetteMid = theme === "light" ? "rgba(252,251,249,0.4)" : "rgba(26,20,16,0.4)";
 
@@ -157,22 +182,19 @@ export default function HeroCanvasAnimation() {
       {/* Sticky Canvas */}
       <div className={`sticky top-0 h-screen w-full overflow-hidden pointer-events-none flex items-center justify-center transition-opacity duration-1000 z-10 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         
-        <motion.div
-          className="absolute inset-0 w-full h-full flex items-center justify-center bg-background"
-          style={{ y: yOffset }}
-        >
+        <div className="absolute inset-0 w-full h-full flex items-center justify-center bg-background">
           <canvas
             ref={canvasRef}
-            className="block transition-all duration-700"
+            className="block"
             style={{ 
               width: "100%", 
-              height: "100%", 
-              objectFit: "contain",
-              filter: mounted && theme === 'light' ? 'brightness(1.05) contrast(1.05)' : 'brightness(1)'
+              height: "100%",
+              willChange: "auto",
+              imageRendering: "auto"
             }}
           />
 
-          {/* Soft vignette - only render when mounted */}
+          {/* Soft vignette */}
           {mounted && (
             <div className="absolute inset-0 pointer-events-none" style={{
               background: `radial-gradient(ellipse at center, transparent 30%, ${vignetteMid} 65%, ${vignetteColor} 100%)`
@@ -183,9 +205,9 @@ export default function HeroCanvasAnimation() {
           <div className="absolute bottom-0 left-0 right-0 h-32" style={{
             background: `linear-gradient(to top, var(--background), transparent)`
           }} />
-        </motion.div>
+        </div>
 
-        {/* Text Overlays - Moved to bottom-left corner */}
+        {/* Text Overlays */}
         <div className="absolute inset-0 pointer-events-none z-10">
           <motion.div 
             style={{ opacity: op1 }} 

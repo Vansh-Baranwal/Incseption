@@ -1,0 +1,33 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Government of India Emblem Simplified -->
+  <!-- Ashoka Pillar Base -->
+  <ellipse cx="100" cy="170" rx="45" ry="8" fill="#1a237e" opacity="0.3"/>
+  
+  <!-- Pillar -->
+  <rect x="85" y="100" width="30" height="70" fill="#1a237e"/>
+  <rect x="82" y="95" width="36" height="8" fill="#1a237e"/>
+  
+  <!-- Ashoka Chakra (Wheel) -->
+  <circle cx="100" cy="60" r="35" fill="none" stroke="#000080" stroke-width="3"/>
+  <circle cx="100" cy="60" r="5" fill="#000080"/>
+  
+  <!-- 24 Spokes -->
+  <g stroke="#000080" stroke-width="2">
+    <line x1="100" y1="25" x2="100" y2="95" />
+    <line x1="135" y1="60" x2="65" y2="60" />
+    <line x1="124.7" y1="35.3" x2="75.3" y2="84.7" />
+    <line x1="124.7" y1="84.7" x2="75.3" y2="35.3" />
+    <line x1="130" y1="42.5" x2="70" y2="77.5" />
+    <line x1="130" y1="77.5" x2="70" y2="42.5" />
+    <line x1="132.5" y1="51" x2="67.5" y2="69" />
+    <line x1="132.5" y1="69" x2="67.5" y2="51" />
+  </g>
+  
+  <!-- Lions (Simplified) -->
+  <circle cx="85" cy="20" r="8" fill="#cd7f32"/>
+  <circle cx="100" cy="15" r="8" fill="#cd7f32"/>
+  <circle cx="115" cy="20" r="8" fill="#cd7f32"/>
+  
+  <!-- Decorative elements -->
+  <rect x="82" y="28" width="36" height="4" fill="#1a237e"/>
+</svg>

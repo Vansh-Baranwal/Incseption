@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { ThemeToggle } from "./ThemeToggle";
 import { motion } from "framer-motion";
+import { Logo } from "./Logo";
 
 export default function HomeNavbar() {
   const [scrolled, setScrolled] = useState(false);
@@ -25,12 +26,15 @@ export default function HomeNavbar() {
           : "bg-transparent py-6"
       }`}
     >
-      <Link href="/">
+      <Link href="/" className="flex items-center gap-3 group">
+        <Logo size={45} />
         <motion.span 
-          whileHover={{ scale: 1.05, rotate: 2 }}
-          whileTap={{ scale: 0.95 }}
-          transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          className="text-lg font-sans font-bold text-foreground cursor-pointer block"
+          className="text-lg font-sans font-bold bg-gradient-to-r from-foreground via-primary to-foreground bg-clip-text text-transparent cursor-pointer block"
+          animate={{ 
+            backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "linear" }}
+          style={{ backgroundSize: "200% auto" }}
         >
           Objection.ai
         </motion.span>
@@ -73,15 +77,25 @@ export default function HomeNavbar() {
             <motion.button
               whileHover={{ 
                 scale: 1.05,
-                boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)"
+                boxShadow: "0 10px 30px -5px rgba(255, 152, 0, 0.4)"
               }}
               whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              className="px-5 py-2 bg-foreground text-background text-sm font-medium rounded-md transition-all font-sans relative overflow-hidden group"
+              animate={{
+                boxShadow: [
+                  "0 0 0 0 rgba(255, 152, 0, 0)",
+                  "0 0 0 4px rgba(255, 152, 0, 0.2)",
+                  "0 0 0 0 rgba(255, 152, 0, 0)"
+                ]
+              }}
+              transition={{ 
+                boxShadow: { duration: 2, repeat: Infinity },
+                scale: { type: "spring", stiffness: 400, damping: 17 }
+              }}
+              className="px-5 py-2 bg-gradient-to-r from-orange-500 to-amber-600 text-white text-sm font-medium rounded-md transition-all font-sans relative overflow-hidden group"
             >
               <span className="relative z-10">Sign In</span>
               <motion.div
-                className="absolute inset-0 bg-primary/20"
+                className="absolute inset-0 bg-gradient-to-r from-amber-400 to-orange-500"
                 initial={{ x: "-100%" }}
                 whileHover={{ x: 0 }}
                 transition={{ duration: 0.3 }}

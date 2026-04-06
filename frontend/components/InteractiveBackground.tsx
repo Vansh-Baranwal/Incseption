@@ -10,6 +10,7 @@ interface Particle {
   vy: number;
   radius: number;
   opacity: number;
+  color: string;
 }
 
 export function InteractiveBackground() {
@@ -41,15 +42,27 @@ export function InteractiveBackground() {
     resizeCanvas();
     window.addEventListener("resize", resizeCanvas);
 
-    // Initialize particles
-    const particleCount = 120;
+    // Vibrant color palette
+    const colors = [
+      "255, 152, 0",    // Orange
+      "33, 150, 243",   // Blue
+      "76, 175, 80",    // Green
+      "156, 39, 176",   // Purple
+      "255, 193, 7",    // Amber
+      "0, 188, 212",    // Cyan
+      "233, 30, 99",    // Pink
+    ];
+
+    // More particles with vibrant colors
+    const particleCount = 100;
     particlesRef.current = Array.from({ length: particleCount }, () => ({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      vx: (Math.random() - 0.5) * 0.5,
-      vy: (Math.random() - 0.5) * 0.5,
-      radius: Math.random() * 5 + 2,
-      opacity: Math.random() * 0.7 + 0.4,
+      vx: (Math.random() - 0.5) * 0.8,
+      vy: (Math.random() - 0.5) * 0.8,
+      radius: Math.random() * 4 + 2,
+      opacity: Math.random() * 0.6 + 0.3,
+      color: colors[Math.floor(Math.random() * colors.length)]
     }));
 
     const handleMouseMove = (e: MouseEvent) => {
@@ -63,10 +76,6 @@ export function InteractiveBackground() {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-      const isDark = theme === "dark";
-      const particleColor = isDark ? "255, 255, 255" : "0, 0, 0";
-      const lineColor = isDark ? "255, 255, 255" : "0, 0, 0";
-
       particlesRef.current.forEach((particle) => {
         // Calculate distance from mouse
         const dx = mouseRef.current.x - particle.x;
@@ -74,23 +83,23 @@ export function InteractiveBackground() {
         const distance = Math.sqrt(dx * dx + dy * dy);
         const maxDistance = 200;
 
-        // Mouse repulsion effect
+        // Enhanced mouse interaction
         if (distance < maxDistance) {
           const force = (maxDistance - distance) / maxDistance;
           const angle = Math.atan2(dy, dx);
-          particle.vx -= Math.cos(angle) * force * 0.15;
-          particle.vy -= Math.sin(angle) * force * 0.15;
+          particle.vx -= Math.cos(angle) * force * 0.2;
+          particle.vy -= Math.sin(angle) * force * 0.2;
         }
 
         // Apply velocity with friction
         particle.x += particle.vx;
         particle.y += particle.vy;
-        particle.vx *= 0.98;
-        particle.vy *= 0.98;
+        particle.vx *= 0.97;
+        particle.vy *= 0.97;
 
-        // Add slight drift back to original behavior
-        particle.vx += (Math.random() - 0.5) * 0.05;
-        particle.vy += (Math.random() - 0.5) * 0.05;
+        // Add gentle drift
+        particle.vx += (Math.random() - 0.5) * 0.1;
+        particle.vy += (Math.random() - 0.5) * 0.1;
 
         // Boundary check with bounce
         if (particle.x < 0 || particle.x > canvas.width) {
@@ -102,33 +111,40 @@ export function InteractiveBackground() {
           particle.y = Math.max(0, Math.min(canvas.height, particle.y));
         }
 
-        // Draw particle
+        // Draw particle with glow effect
+        ctx.shadowBlur = 15;
+        ctx.shadowColor = `rgba(${particle.color}, 0.5)`;
         ctx.beginPath();
         ctx.arc(particle.x, particle.y, particle.radius, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(${particleColor}, ${particle.opacity})`;
+        ctx.fillStyle = `rgba(${particle.color}, ${particle.opacity})`;
         ctx.fill();
+        ctx.shadowBlur = 0;
       });
 
-      // Draw connections between nearby particles
+      // Draw vibrant connections between nearby particles
       particlesRef.current.forEach((p1, i) => {
         particlesRef.current.slice(i + 1).forEach((p2) => {
           const dx = p1.x - p2.x;
           const dy = p1.y - p2.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
 
-          if (distance < 180) {
-            const opacity = (1 - distance / 180) * 0.35;
+          if (distance < 150) {
+            const opacity = (1 - distance / 150) * 0.4;
+            const gradient = ctx.createLinearGradient(p1.x, p1.y, p2.x, p2.y);
+            gradient.addColorStop(0, `rgba(${p1.color}, ${opacity})`);
+            gradient.addColorStop(1, `rgba(${p2.color}, ${opacity})`);
+            
             ctx.beginPath();
             ctx.moveTo(p1.x, p1.y);
             ctx.lineTo(p2.x, p2.y);
-            ctx.strokeStyle = `rgba(${lineColor}, ${opacity})`;
+            ctx.strokeStyle = gradient;
             ctx.lineWidth = 1.5;
             ctx.stroke();
           }
         });
       });
 
-      // Draw connections to mouse
+      // Draw connections to mouse with vibrant color
       const mouseX = mouseRef.current.x;
       const mouseY = mouseRef.current.y;
       
@@ -137,12 +153,12 @@ export function InteractiveBackground() {
         const dy = mouseY - particle.y;
         const distance = Math.sqrt(dx * dx + dy * dy);
 
-        if (distance < 250) {
-          const opacity = (1 - distance / 250) * 0.5;
+        if (distance < 200) {
+          const opacity = (1 - distance / 200) * 0.6;
           ctx.beginPath();
           ctx.moveTo(particle.x, particle.y);
           ctx.lineTo(mouseX, mouseY);
-          ctx.strokeStyle = `rgba(${lineColor}, ${opacity})`;
+          ctx.strokeStyle = `rgba(${particle.color}, ${opacity})`;
           ctx.lineWidth = 2;
           ctx.stroke();
         }
@@ -169,7 +185,7 @@ export function InteractiveBackground() {
       ref={canvasRef}
       className="fixed inset-0 pointer-events-none"
       style={{ 
-        opacity: 1,
+        opacity: 0.8,
         zIndex: 1
       }}
     />
