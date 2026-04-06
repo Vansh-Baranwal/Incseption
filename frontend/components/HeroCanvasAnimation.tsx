@@ -25,10 +25,6 @@ export default function HeroCanvasAnimation() {
   const containerRef = useRef<HTMLDivElement>(null);
   const imagesRef = useRef<HTMLImageElement[]>([]);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   const { scrollYProgress } = useScroll({
     target: containerRef,
     offset: ["start start", "end end"],
@@ -43,6 +39,10 @@ export default function HeroCanvasAnimation() {
   const frameIndex = useTransform(springProgress, [0, 1], [0, TOTAL_FRAMES - 1]);
   const scrollVelocity = useVelocity(scrollYProgress);
   const yOffset = useTransform(scrollVelocity, [-1, 0, 1], [8, 0, -8], { clamp: true });
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     let loadedCount = 0;
@@ -139,23 +139,6 @@ export default function HeroCanvasAnimation() {
   const vignetteColor = theme === "light" ? "rgba(252,251,249,0.95)" : "rgba(26,20,16,0.95)";
   const vignetteMid = theme === "light" ? "rgba(252,251,249,0.4)" : "rgba(26,20,16,0.4)";
 
-  // Don't render vignette until mounted to avoid hydration mismatch
-  if (!mounted) {
-    return (
-      <div ref={containerRef} className="relative h-[150vh] bg-background w-full transition-colors duration-300">
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
-          <div className="flex flex-col items-center gap-6">
-            <h1 className="text-2xl font-serif text-foreground">Objection.ai</h1>
-            <div className="w-48 h-[2px] bg-foreground/5 rounded-full overflow-hidden">
-              <div className="h-full bg-foreground/30 transition-all duration-200 rounded-full" style={{width: '0%'}} />
-            </div>
-            <p className="text-xs text-foreground/30">0%</p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div ref={containerRef} className="relative h-[150vh] bg-background w-full transition-colors duration-300">
       {/* Loading Screen */}
@@ -172,7 +155,7 @@ export default function HeroCanvasAnimation() {
       )}
 
       {/* Sticky Canvas */}
-      <div className={`sticky top-0 h-screen w-full overflow-hidden pointer-events-none flex items-center justify-center transition-opacity duration-1000 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
+      <div className={`sticky top-0 h-screen w-full overflow-hidden pointer-events-none flex items-center justify-center transition-opacity duration-1000 z-10 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
         
         <motion.div
           className="absolute inset-0 w-full h-full flex items-center justify-center bg-background"
@@ -180,14 +163,21 @@ export default function HeroCanvasAnimation() {
         >
           <canvas
             ref={canvasRef}
-            className={`block transition-all duration-700 ${theme === 'light' ? 'brightness-[1.05] contrast-[1.05]' : 'brightness-100'}`}
-            style={{ width: "100%", height: "100%", objectFit: "contain" }}
+            className="block transition-all duration-700"
+            style={{ 
+              width: "100%", 
+              height: "100%", 
+              objectFit: "contain",
+              filter: mounted && theme === 'light' ? 'brightness(1.05) contrast(1.05)' : 'brightness(1)'
+            }}
           />
 
-          {/* Soft vignette — dynamic based on theme */}
-          <div className="absolute inset-0 pointer-events-none" style={{
-            background: `radial-gradient(ellipse at center, transparent 30%, ${vignetteMid} 65%, ${vignetteColor} 100%)`
-          }} />
+          {/* Soft vignette - only render when mounted */}
+          {mounted && (
+            <div className="absolute inset-0 pointer-events-none" style={{
+              background: `radial-gradient(ellipse at center, transparent 30%, ${vignetteMid} 65%, ${vignetteColor} 100%)`
+            }} />
+          )}
           
           {/* Bottom gradient cover */}
           <div className="absolute bottom-0 left-0 right-0 h-32" style={{
@@ -196,7 +186,7 @@ export default function HeroCanvasAnimation() {
         </motion.div>
 
         {/* Text Overlays - Moved to bottom-left corner */}
-        <div className="absolute inset-0 pointer-events-none">
+        <div className="absolute inset-0 pointer-events-none z-10">
           <motion.div 
             style={{ opacity: op1 }} 
             className="absolute bottom-16 left-8 md:left-16 max-w-2xl"
@@ -252,8 +242,6 @@ export default function HeroCanvasAnimation() {
               >
                 Sign In
               </motion.button>
-            </Link>
-              Sign In
             </Link>
           </motion.div>
         </div>

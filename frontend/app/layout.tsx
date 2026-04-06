@@ -4,6 +4,7 @@ import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import { CustomCursor } from "@/components/CustomCursor";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
+import { InteractiveBackground } from "@/components/InteractiveBackground";
 import { ScrollProgress } from "@/components/ScrollProgress";
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export default function RootLayout({
           <ScrollProgress />
           <CustomCursor imageUrl="/gavel.svg" />
           <AnimatedBackground />
+          <InteractiveBackground />
           {children}
           <Toaster 
             position="top-right" 

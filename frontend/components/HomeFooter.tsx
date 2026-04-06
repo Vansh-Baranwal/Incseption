@@ -82,7 +82,7 @@ export default function HomeFooter() {
                   delay: i * 0.2 
                 }}
                 whileHover={{ scale: 1.05, y: -5 }}
-                className="flex flex-col gap-4 group p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-2xl hover:border-primary/40 transition-all cursor-default relative overflow-hidden"
+                className="flex flex-col gap-4 group p-6 rounded-2xl bg-card border border-border shadow-sm hover:shadow-2xl hover:border-primary/40 transition-all cursor-default relative overflow-hidden z-10"
               >
                 {/* Animated gradient background on hover */}
                 <motion.div
